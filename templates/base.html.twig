@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="{{ app.request.locale|split('_')[0] }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+    <!-- applied to all survos-mobile -->
+
+    <title>{% block title 'SurvosFw'%}</title>
+
+    {#        <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">#}
+    {% block stylesheets %}
+        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/survosFw/style.css') }}" ></link>
+    {% endblock %}
+
+    {% block javascripts %}
+        {# perhaps the entry point should be configurable, since it might be mobile_app.  Also, configure if pwa is called #}
+        {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% endblock %}
+
+    {% block pwa %}
+    {% endblock %}
+
+</head>
+
+{#    {% set _appController = 'app' %}#}
+{# app_controller handles navigation #}
+<body>
+<div id="app" {{ stimulus_controller(_app_sc) }} >
+{% block body %}{% endblock %}
+</div>
+
+{# these are defined by the child page #}
+{{ block('templates') }}
+
+<template id="layout">
+    <ons-toolbar id="{{ pageId|default('index') }}-toolbar">
+        <div class="left">
+            <ons-back-button></ons-back-button>
+        </div>
+
+        <div class="left">
+            {# what is this for? profile? #}
+            <ons-toolbar-button icon="fa-user"></ons-toolbar-button>
+        </div>
+
+        <div class="center" {{ stimulus_target(_app_sc,'page_title') }}>
+            page_title
+            {{ pageId|default('index') }}
+        </div>
+        <div class="right">
+            <ons-toolbar-button>-</ons-toolbar-button>
+            <ons-toolbar-button>+</ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+
+{#    <button hidden class="btn btn-lg btn-success " {{ stimulus_controller('@pwa/install') }} {{ stimulus_action('@pwa/install', 'install', 'click') }} {{ stimulus_target('@pwa/install', 'install') }}>#}
+{#        Install#}
+{#    </button>#}
+{#    <div class="alert alert-info" role="alert" {{ stimulus_controller('@pwa/connection-status') }}>#}
+{#                    <span {{ stimulus_target('@pwa/connection-status', 'message') }}>#}
+{#                        We are trying to guess what is the current status of your Internet connection#}
+{#                    </span>#}
+{#    </div>#}
+
+</template>
+
+</body>
+</html>

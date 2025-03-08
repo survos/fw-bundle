@@ -1,0 +1,37 @@
+{#  this fires an event, all listeners/subscribers will respond.  use A #}
+{#    {% set menuItem = knp_menu_get(menuAlias, path, options) %} #}
+{% set theme = false %}
+    {% if type in [MOBILE_TAB_MENU] %}
+        {#        "template"      : "@SurvosBootstrap/knp_sidebar_menu.html.twig", #}
+        {{ knp_menu_render(menuItem, {
+            "template"      : "@SurvosFw/menu/tab_menu.html.twig",
+            "debug": debug|default(false),
+            "allow_safe_labels": true,
+            'comment': "This is an custom option passed in knp_menu_render. Only used by our custom renderer.",
+            rootAttributes: {
+                class: 'menu-inner py-1',
+                role: 'menu'
+            },
+
+        }) }}
+    {% elseif type in [MOBILE_PAGE_MENU] %}
+        {{ knp_menu_render(menuItem, {
+            "template"      : "@SurvosFw/menu/page_menu.html.twig",
+            "debug": debug|default(false),
+            "allow_safe_labels": true,
+            'comment': "This is an custom option passed in knp_menu_render. Only used by our custom renderer.",
+            rootAttributes: {
+                class: 'menu-inner py-1',
+                role: 'menu'
+            },
+
+        }) }}
+    {% else %}
+        <div class="text-danger">Invalid menu type: {{ type }}</div>
+    {% endif %}
+{#    { #}
+{#    debug: app.request.get('debug', false), #}
+{#    menuItem: menuItem, #}
+{#    project: project, #}
+{#    title: project.code #}
+{#    } #}

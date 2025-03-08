@@ -1,0 +1,76 @@
+{# add stimulus controller for title? #}
+{#{% set _sc = pageController|default(false) %}#}
+
+
+{% set _sc = block('pageController') is defined ? block('pageController') : false %}
+<ons-page id="{{ onsMeta.templateId }}" {{ _sc ? stimulus_controller(_sc) }}>
+
+    {% if onsMeta.isPage %}
+        <ons-toolbar>
+            <div class="center">{{ onsMeta.templateId }}</div>
+            <div class="right">
+                <ons-toolbar-button>-</ons-toolbar-button>
+                <ons-toolbar-button>+</ons-toolbar-button>
+            </div>
+        </ons-toolbar>
+    {% endif %}
+
+    <ons-toolbar>
+        <div class="left">
+            <ons-toolbar-button icon="{{ onsMeta.icon|default('fa-bug')}}"></ons-toolbar-button>
+        </div>
+
+        <div class="center">
+            {# does not change, this is a tab title #}
+            {{ block('title')??'~' }}
+        </div>
+
+        <div class="right">
+            <ons-toolbar-button>-</ons-toolbar-button>
+            <ons-toolbar-button>+</ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+
+
+
+
+    {#    {% set toolbarContent = block('toolbar')|default(false) %} #}
+    {% if onsMeta.isPage %}
+        <ons-toolbar id="{{ onsMeta.templateId }}-toolbar">
+            {% block toolbar %}
+                <div class="left">
+                    <ons-back-button></ons-back-button>
+                </div>
+
+                <div class="left">
+{#                    <ons-toolbar-button icon="md-face"></ons-toolbar-button>#}
+                </div>
+
+                <div class="center" {{ stimulus_target(_app_sc,'pageTitle') }}>
+
+                    {{ onsMeta.templateId|trans|title }}
+                </div>
+                <div class="right">
+
+{#                    <ons-toolbar-button>-</ons-toolbar-button>#}
+{#                    <ons-toolbar-button>+</ons-toolbar-button>#}
+                </div>
+
+            {% endblock %}
+        </ons-toolbar>
+    {% endif %}
+
+    <div class="content" {{ stimulus_target('app', 'content') }}>
+{% if app.request.get('debug') %}
+    <p>
+        This is the {{ _self }} page, served from twig. {{ 'now'|date }}.
+    </p>
+        <pre>{{ onsMeta|json_pretty }}</pre>
+        {% endif %}
+        {% block body %}
+        {% endblock %}
+    </div>
+
+</ons-page>
+
+

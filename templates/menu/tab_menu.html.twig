@@ -1,0 +1,43 @@
+{% extends '@KnpMenu/menu.html.twig' %}
+{% set debug = options['debug']|default(false) %}
+{% block root %}
+    <!-- {{ _self }} -->
+    {% set listAttributes = item.childrenAttributes %}
+    {{ block('list') -}}
+{% endblock %}
+
+{% block item %}
+{#    {{ dump(item) }}#}
+    {% set icon = item.attributes.icon|default('fa-question-mark') %}
+    {% set badge = item.extras.badge|default(false) %}
+    {% set label = item.label %}
+    {% set domain = item.extras.translation_domain|default(false) %}
+    {% if domain %}
+    {% set label = label|trans({}, domain ) %}
+    {% endif %}
+
+<ons-tab page="{{ item.name }}" label="{{ label|title }}"
+        {{ stimulus_target('app','tab') }}
+         {% if icon %}icon="{{ icon }}"{% endif %}
+         {% if badge %}badge="{{ badge.value }}"{% endif %}
+{#        {% if item.name=='saved' ? 'active' %}{% endif %}#}
+        {# active-icon #}
+>
+
+</ons-tab>
+{#    {{ ux_icon('mdi:calendar') }}#}
+
+{% endblock %}
+
+{% block label %}
+{#    {{ dump(item) }}#}
+{{ item.label  }}
+{% endblock %}
+
+{% block list %}
+    {# we could add the ons-page or ons-tab wrapper here #}
+    {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
+        {% import _self as knp_menu %}
+        {{ block('children') }}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,29 @@
+{
+  "name": "@survos/mobile-bundle",
+  "description": "integrate onsonui and other libraries with Symfony",
+  "license": "MIT",
+  "version": "1.0.5",
+  "symfony": {
+    "controllers": {
+      "mobile": {
+        "main": "src/controllers/mobile_controller.js",
+        "webpackMode": "eager",
+        "fetch": "lazy",
+        "enabled": true,
+        "autoimport": {
+        }
+      }
+    },
+    "importmap": {
+      "@survos-mobile/mobile": "path:%PACKAGE%/src/controllers/mobile_controller.js"
+    }
+  },
+  "peerDependencies": {
+    "@hotwired/stimulus": "^3.2.0"
+  },
+  "devDependencies": {
+    "@hotwired/stimulus": "^3.2.2"
+  },
+  "dependencies": {
+  }
+}

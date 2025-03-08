@@ -1,0 +1,35 @@
+{
+    "name": "survos/fw-bundle",
+    "description": "Bundle with utilities for creating a Symfony-based mobile app with framework7",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "require": {
+        "php": "^8.3",
+        "symfony/config": "^6.4 || ^7.1",
+        "symfony/dependency-injection": "^6.4 || ^7.1",
+        "symfony/http-kernel": "^6.4 || ^7.1",
+        "twig/twig": "^3.4",
+        "survos/core-bundle": "^1.5",
+        "knplabs/knp-menu-bundle": "^3.2",
+        "symfony/event-dispatcher": "^6.4 || ^7.1",
+        "symfony/ux-twig-component": "^2.22",
+        "symfony/options-resolver": "^7.2"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^2.0",
+        "symfony/browser-kit": "^6.4 || ^7.1",
+        "symfony/framework-bundle": "^6.4 || ^7.1",
+        "symfony/phpunit-bridge": "^6.4 || ^7.1",
+        "symfony/twig-bundle": "^6.4 || ^7.1",
+        "symfony/var-dumper": "^6.4 || ^7.1",
+        "symfony/security-bundle": "^6.4 || ^7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Survos\\FwBundle\\": "src/"
+        }
+    }
+}

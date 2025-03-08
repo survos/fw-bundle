@@ -1,0 +1,24 @@
+{#  shell, in mobile/templates #}
+
+{% extends 'onsPage.html.twig' %}
+{#{% block pageId 'initial-layout' %}#}
+{% block toolbar '' %} {# otherwise, a blank space at the top... #}
+
+{% block body %}
+    <ons-toolbar>
+        <div {{ stimulus_target(_app_sc,'title') }} class="center">title {{ _self }}</div>
+
+        {# this dropdown menu icon, click to open #}
+        <div class="left">
+            <ons-toolbar-button {{ stimulus_action(_app_sc,'openMenu', 'click') }}>
+                <ons-icon icon="fa-bars"></ons-icon>
+                xx
+            </ons-toolbar-button>
+        </div>
+    </ons-toolbar>
+
+    <ons-tabbar id="tabbar" {{ stimulus_target(_app_sc,'tabbar') }}>
+        {{ component('mobile_menu', {type: MOBILE_TAB_MENU, caller: _self}) }}
+    </ons-tabbar>
+
+{% endblock %}

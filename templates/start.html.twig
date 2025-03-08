@@ -1,0 +1,120 @@
+{% extends "@SurvosFw/base.html.twig" %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/survosFw/style.css') }}" ></link>
+{% endblock %}
+
+{#    {% block stylesheets %}#}
+{#        {{ parent() }}#}
+{#    {% endblock %}#}
+
+{% block templates %}
+    {% for code, template in templates|default([]) %}
+        <template id="{{ code }}">
+            {{ template|raw }}
+        </template>
+    {% endfor %}
+{% endblock %}
+
+  {% block body %}
+
+
+      {{ block('templates') }}
+      {{ block('initial_layout_template') }}
+
+      <ons-splitter>
+          <!-- The side menu -->
+          <ons-splitter-side
+                  label="menu"
+                  icon="users"
+                  id="menu" collapse {{ stimulus_target('app','menu') }}>
+              <ons-page>
+                  <ons-list>
+
+                      {{ component('mobile_menu', {type: MOBILE_PAGE_MENU, caller: _self}) }}
+
+                      <ons-list-item {{ stimulus_action('app', 'clear', 'click') }}>
+                          Clear local storage
+                      </ons-list-item>
+                      <ons-list-item {{ stimulus_action('app', 'close', 'click') }}>
+                          Exit
+                      </ons-list-item>
+
+                  </ons-list>
+              </ons-page>
+          </ons-splitter-side>
+
+          <!-- Everything not in the side menu -->
+          <ons-splitter-content>
+              <!-- https://onsen.io/v2/api/js/ons-navigator.html -->
+              <!-- navigates pages, not tabs.  -->
+              <ons-navigator
+                      id="navigator"
+                      {{ stimulus_target(_app_sc, 'navigator') }}
+                      page="initial-layout"
+              > <!-- the starting page -->
+
+              </ons-navigator>
+          </ons-splitter-content>
+      </ons-splitter>
+
+
+  {% endblock %}
+{% block initial_layout_template %}
+    <template id="initial-layout">
+        <ons-page>
+
+            <ons-toolbar id="home-toolbar">
+                <div {{ stimulus_target(_app_sc,'title') }} class="center">
+                    {{ 'welcome'|trans|title }}
+                </div>
+
+                {# this dropdown menu icon, click to open #}
+                <div class="left">
+                    <ons-toolbar-button {{ stimulus_action(_app_sc,'openMenu', 'click') }}>
+                        <ons-icon icon="fa-bars"></ons-icon>
+                    </ons-toolbar-button>
+                </div>
+
+                <div class="right">
+
+                    <ons-toolbar-button icon="fa-language"></ons-toolbar-button>
+{#                    <select class="select-input xx" {{ stimulus_action('app', 'locale', 'change')}}>#}
+{#                        {% for lang in app.enabled_locales %}#}
+{#                        <option value="{{ lang }}">{{ lang|language_name(lang) }} XX</option>#}
+{#                        {% endfor %}#}
+{#                    </select>#}
+
+                    <ons-select >
+                        <select class="select-input" {{ stimulus_action('app', 'locale', 'change')}}>
+                            {% for lang in app.enabled_locales %}
+{#                                {% set pathWithLocale = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({_locale: lang})) %}#}
+{#                                {% set currentClass = app.request.locale == lang ? 'border-3' : 'border-0'  %}#}
+{#                                {% set height = app.request.locale == lang ? 20 : 14 %}#}
+                                {% set pathWithLocale = path(app.request.attributes.get('_route'), app.request.attributes.get('_route_params')|merge({_locale: lang})) %}
+                                <option value="{{ pathWithLocale }}" {{ lang == app.locale ? 'selected' }}>
+                                    {{ lang|language_name(lang) }}
+                                </option>
+{#                                <a href="{{ pathWithLocale }}" class="border {{ currentClass }}">#}
+{#                                    <button type="button" class="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle {{ currentClass }}"#}
+{#                                            aria-haspopup="true" aria-expanded="false">#}
+
+{#                                        {{ lang }}#}
+{#                                    </button>#}
+{#                                </a>#}
+                            {% endfor %}
+                        </select>
+                    </ons-select>
+
+
+                </div>
+            </ons-toolbar>
+
+            <ons-tabbar id="tabbar" {{ stimulus_target(_app_sc,'tabbar') }}>
+                {# render this from a menu event or include it #}
+                {{ component('mobile_menu', {type: MOBILE_TAB_MENU, caller: _self}) }}
+            </ons-tabbar>
+        </ons-page>
+    </template>
+
+{% endblock %}

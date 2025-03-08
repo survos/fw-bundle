@@ -1,0 +1,50 @@
+{% extends '@KnpMenu/menu.html.twig' %}
+{% set debug = options['debug']|default(false) %}
+{% block root %}
+    <!-- {{ _self }} -->
+    {% set listAttributes = item.childrenAttributes %}
+    {{ block('list') -}}
+{% endblock %}
+
+{% block heading %}
+<ons-list-title style="margin-top: 10px">{{ item.label }}</ons-list-title>
+{% endblock %}
+
+{% block item %}
+    {% set icon = item.attributes.icon|default('fa-question-mark') %}
+    {% set badge = item.extras.badge|default(false) %}
+    {% set route = item.name %} {#  really the pageId that's loaded #}
+    {% if item.attributes.style|default('') == 'header' %}
+        {{ block('heading') }}
+    {% else %}
+            {% if item.linkAttributes.target|default('') == '_blank' %}
+                <a target="_blank" href="{{ item.uri }}">
+                    {{ block('label') }}
+                </a>
+                {% else %}
+        <ons-list-item
+            {{ stimulus_action('app', 'loadPage', 'click', {
+                route: route,
+                extras: item.extras
+            }) }}
+        {% endif %}
+    >
+        {% endif %}
+        {% if icon %}
+        <div class="left">
+            <ons-icon icon="{{ icon }}" class="list-item__icon"></ons-icon>
+        </div>
+        {% endif %}
+
+        {{ item.label|trans }}
+    </ons-list-item>
+
+{% endblock %}
+
+{% block list %}
+    {# we could add the ons-page or ons-tab wrapper here #}
+    {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
+        {% import _self as knp_menu %}
+        {{ block('children') }}
+    {% endif %}
+{% endblock %}
