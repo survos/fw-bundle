@@ -14,11 +14,14 @@
     {% if domain %}
     {% set label = label|trans({}, domain ) %}
     {% endif %}
+    {% set code = item.name %}
 
-    <a href="#view-{{ label }}" class="tab-link tab-link-active">
+
+    <a href="{{ item.uri }}" class="tab-link tab-link-active">
         <i class="icon f7-icons if-not-md">house_fill</i>
         <twig:ux:icon name="{{ icon }}" />
         <span class="tabbar-label">{{ label }}</span>
+        <code>{{ code }}</code>
     </a>
 
 {#    <ons-tab page="{{ item.name }}" label="{{ label|title }}"#}

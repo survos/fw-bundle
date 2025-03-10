@@ -3,6 +3,7 @@
 namespace Survos\FwBundle;
 
 use Survos\CoreBundle\Traits\HasAssetMapperTrait;
+use Survos\FwBundle\Command\CompileRoutesCommand;
 use Survos\FwBundle\Event\KnpMenuEvent;
 use Survos\FwBundle\Components\MenuComponent;
 use Survos\FwBundle\Menu\MenuService;
@@ -34,6 +35,14 @@ class SurvosFwBundle extends AbstractBundle implements CompilerPassInterface
                 ->setAutoconfigured(true)
                 ->setAutowired(true)
                 ;
+        }
+
+        foreach ([CompileRoutesCommand::class] as $className) {
+            $builder->register($className)
+                ->setPublic(true)
+                ->setAutoconfigured(true)
+                ->setAutowired(true);
+
         }
 
         $builder->register(MenuComponent::class)->setAutowired(true)->setAutoconfigured(true)

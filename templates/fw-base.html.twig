@@ -57,8 +57,12 @@
 
 <body data-turbo="false">
 {% block body %}
+{{ _self }}
 
-  <div id="app">
+  <div id="app" {{ stimulus_controller('app', {
+    name: "Stimulus App!",
+    theme: 'auto'
+  }) }}>
     <!-- Left panel with cover effect-->
     <div class="panel panel-left panel-cover dark panel-init">
       <div class="view">
@@ -102,18 +106,15 @@
           {{ component('mobile_menu', {type: MOBILE_TAB_MENU, caller: _self}) }}
 
           <a href="#view-home" class="tab-link tab-link-active">
-            <i class="icon f7-icons if-not-md">house_fill</i>
             <twig:ux:icon name="tabler:home-filled" />
             <span class="tabbar-label">Home</span>
           </a>
           <a href="#view-catalog" class="tab-link">
-            <i class="icon f7-icons if-not-md">square_list_fill</i>
-            <i class="icon material-icons if-md">view_list</i>
+            <twig:ux:icon name="tabler:list" />
             <span class="tabbar-label">Catalog</span>
           </a>
           <a href="#view-settings" class="tab-link">
-            <i class="icon f7-icons if-not-md">gear</i>
-            <i class="icon material-icons if-md">settings</i>
+            <twig:ux:icon name="tabler:settings" />
             <span class="tabbar-label">Settings</span>
           </a>
         </div>
@@ -132,7 +133,7 @@
                   <i class="icon material-icons if-md">menu</i>
                 </a>
               </div>
-              <div class="title sliding">My App</div>
+              <div class="title sliding">My App sliding</div>
               <div class="right">
                 <a href="#" class="link icon-only panel-open" data-panel="right">
                   <i class="icon f7-icons if-not-md">menu</i>
@@ -140,7 +141,7 @@
                 </a>
               </div>
               <div class="title-large">
-                <div class="title-large-text">My App</div>
+                <div class="title-large-text">My App title</div>
               </div>
             </div>
           </div>
@@ -203,12 +204,12 @@
 
       <!-- Catalog View -->
       <div id="view-catalog" class="view view-init tab" data-name="catalog" data-url="/catalog/">
-        <!-- Catalog page will be loaded here dynamically from /catalog/ route -->
+         Catalog page will be loaded here dynamically from /catalog/ route
       </div>
 
       <!-- Settings View -->
       <div id="view-settings" class="view view-init tab" data-name="settings" data-url="/settings/">
-        <!-- Settings page will be loaded here dynamically from /settings/ route -->
+        Settings page will be loaded here dynamically from /settings/ route
       </div>
     </div>
 
@@ -278,7 +279,6 @@
     </div>
   </div>
 
-  <!-- Framework7 library -->
 </body>
 {% endblock %}
 

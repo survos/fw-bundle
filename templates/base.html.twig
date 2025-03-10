@@ -25,33 +25,33 @@
 {#    {% set _appController = 'app' %}#}
 {# app_controller handles navigation #}
 <body>
-<div id="app" {{ stimulus_controller(_app_sc) }} >
+{#<div id="app" {{ stimulus_controller(_app_sc) }} >#}
 {% block body %}{% endblock %}
-</div>
+{#</div>#}
 
 {# these are defined by the child page #}
 {{ block('templates') }}
 
-<template id="layout">
-    <ons-toolbar id="{{ pageId|default('index') }}-toolbar">
-        <div class="left">
-            <ons-back-button></ons-back-button>
-        </div>
+{#<template id="layout">#}
+{#    <ons-toolbar id="{{ pageId|default('index') }}-toolbar">#}
+{#        <div class="left">#}
+{#            <ons-back-button></ons-back-button>#}
+{#        </div>#}
 
-        <div class="left">
-            {# what is this for? profile? #}
-            <ons-toolbar-button icon="fa-user"></ons-toolbar-button>
-        </div>
+{#        <div class="left">#}
+{#            #}{# what is this for? profile? #}
+{#            <ons-toolbar-button icon="fa-user"></ons-toolbar-button>#}
+{#        </div>#}
 
-        <div class="center" {{ stimulus_target(_app_sc,'page_title') }}>
-            page_title
-            {{ pageId|default('index') }}
-        </div>
-        <div class="right">
-            <ons-toolbar-button>-</ons-toolbar-button>
-            <ons-toolbar-button>+</ons-toolbar-button>
-        </div>
-    </ons-toolbar>
+{#        <div class="center" {{ stimulus_target(_app_sc,'page_title') }}>#}
+{#            page_title#}
+{#            {{ pageId|default('index') }}#}
+{#        </div>#}
+{#        <div class="right">#}
+{#            <ons-toolbar-button>-</ons-toolbar-button>#}
+{#            <ons-toolbar-button>+</ons-toolbar-button>#}
+{#        </div>#}
+{#    </ons-toolbar>#}
 
 {#    <button hidden class="btn btn-lg btn-success " {{ stimulus_controller('@pwa/install') }} {{ stimulus_action('@pwa/install', 'install', 'click') }} {{ stimulus_target('@pwa/install', 'install') }}>#}
 {#        Install#}
@@ -62,7 +62,7 @@
 {#                    </span>#}
 {#    </div>#}
 
-</template>
+{#</template>#}
 
 </body>
 </html>

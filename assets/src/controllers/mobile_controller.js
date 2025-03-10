@@ -1,6 +1,10 @@
 import {Controller} from '@hotwired/stimulus';
 
 /*
+
+This class has not been updated for Framework 7, it is for OnsenUI but we may want something like this.
+
+
 * The following line makes this controller "lazy": it won't be downloaded until needed
 * See https://github.com/symfony/stimulus-bridge#lazy-controllers
 */
