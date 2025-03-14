@@ -97,31 +97,30 @@
                 <div class="navbar">
                     <div class="navbar-bg"></div>
                     <div class="navbar-inner">
-                        <div class="title">Awesome App</div>
+                        <div class="title">in {{ _self }}</div>
                     </div>
                 </div>
 
                 <!-- Bottom Toolbar -->
                 <div class="toolbar toolbar-bottom tabbar-icons">
                     <div class="toolbar-inner">
-
                         {{ component('mobile_menu', {type: MOBILE_TAB_MENU, caller: _self}) }}
 
-                        <a href="#view-home" class="tab-link tab-link-active">
-                            <i class="icon f7-icons if-not-md">house_fill</i>
-                            <twig:ux:icon name="tabler:home-filled" />
-                            <span class="tabbar-label">Home</span>
-                        </a>
-                        <a href="#view-catalog" class="tab-link">
-                            <i class="icon f7-icons if-not-md">square_list_fill</i>
-                            <i class="icon material-icons if-md">view_list</i>
-                            <span class="tabbar-label">Catalog</span>
-                        </a>
-                        <a href="#view-settings" class="tab-link">
-                            <i class="icon f7-icons if-not-md">gear</i>
-                            <i class="icon material-icons if-md">settings</i>
-                            <span class="tabbar-label">Settings</span>
-                        </a>
+{#                        <a href="#view-home" class="tab-link tab-link-active">#}
+{#                            <i class="icon f7-icons if-not-md">house_fill</i>#}
+{#                            <twig:ux:icon name="tabler:home-filled" />#}
+{#                            <span class="tabbar-label">Home</span>#}
+{#                        </a>#}
+{#                        <a href="#view-catalog" class="tab-link">#}
+{#                            <i class="icon f7-icons if-not-md">square_list_fill</i>#}
+{#                            <i class="icon material-icons if-md">view_list</i>#}
+{#                            <span class="tabbar-label">Catalog</span>#}
+{#                        </a>#}
+{#                        <a href="#view-settings" class="tab-link">#}
+{#                            <i class="icon f7-icons if-not-md">gear</i>#}
+{#                            <i class="icon material-icons if-md">settings</i>#}
+{#                            <span class="tabbar-label">Settings</span>#}
+{#                        </a>#}
                     </div>
                 </div>
 
@@ -130,7 +129,7 @@
                 <div class="page-content">
                     <p>Page content goes here</p>
                     <!-- Link to another page -->
-                    <a href="/about/">About app</a>
+                    <a href="{{ path('app_page', {page: 'about'}) }}">About app (/pages)</a>
                 </div>
             </div>
         </div>
