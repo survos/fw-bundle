@@ -2,7 +2,7 @@
 
 namespace Survos\FwBundle\Twig;
 
-use Survos\FwBundle\Model\OnsMeta;
+use Survos\FwBundle\Model\Fw7Meta;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -23,18 +23,18 @@ class TwigExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('ons_metadata', [$this, 'getOnsMetaData'])
+            new TwigFunction('fw7_metadata', $this->getFw7MetaData(...))
         ];
     }
 
-    public function getOnsMetaData(string $_self, string $type, array $extra = []): OnsMeta
+    public function getFw7MetaData(string $_self, string $type, array $extra = []): Fw7Meta
     {
         // return $this->event??($this->type === 'page' ? 'postpush' : 'prechange');
 
         $templateId = $this->basename($_self);
         $triggerEvent = sprintf("%s.%s", $templateId, ($type === 'tab') ? "prechange" : "postpush");
         // optionsResolver?
-        return new OnsMeta(
+        return new Fw7Meta(
             $templateId,
             type: $type,
             triggerEvent: $triggerEvent,

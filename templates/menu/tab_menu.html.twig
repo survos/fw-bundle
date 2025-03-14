@@ -17,12 +17,20 @@
     {% set code = item.name %}
 
 
-    <a href="{{ item.uri }}" class="tab-link tab-link-active">
+    {# tab-link-active class ? #}
+    <a href="{{ item.uri }}" title="{{ item.uri }}" class="tab-link ">
         <i class="icon f7-icons if-not-md">house_fill</i>
         <twig:ux:icon name="{{ icon }}" />
-        <span class="tabbar-label">{{ label }}</span>
-        <code>{{ code }}</code>
+        {# during debug, display the uri.  @todo: open in new tab for debugging #}
+{#        <span class="tabbar-label">{{ label }}</span>#}
+        <span class="tabbar-label">{{ item.uri }}</span>
     </a>
+{#    <a target="_blank" href="{{ item.uri }}">#}
+{#        <code>{{ item.uri }}#}
+{#            <twig:ux:icon name="tabler:bug" />#}
+{#        </code>#}
+
+{#    </a>#}
 
 {#    <ons-tab page="{{ item.name }}" label="{{ label|title }}"#}
 {#        {{ stimulus_target('app','tab') }}#}

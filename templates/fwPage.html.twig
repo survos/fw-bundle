@@ -1,13 +1,13 @@
 {# add stimulus controller for title? #}
 {#{% set _sc = pageController|default(false) %}#}
 
-
 {% set _sc = block('pageController') is defined ? block('pageController') : false %}
-<ons-page id="{{ onsMeta.templateId }}" {{ _sc ? stimulus_controller(_sc) }}>
 
-    {% if onsMeta.isPage %}
+<ons-page id="{{ fw7Meta.templateId }}" {{ _sc ? stimulus_controller(_sc) }}>
+
+    {% if fw7Meta.isPage %}
         <ons-toolbar>
-            <div class="center">{{ onsMeta.templateId }}</div>
+            <div class="center">{{ fw7Meta.templateId }}</div>
             <div class="right">
                 <ons-toolbar-button>-</ons-toolbar-button>
                 <ons-toolbar-button>+</ons-toolbar-button>
@@ -17,7 +17,7 @@
 
     <ons-toolbar>
         <div class="left">
-            <ons-toolbar-button icon="{{ onsMeta.icon|default('fa-bug')}}"></ons-toolbar-button>
+            <ons-toolbar-button icon="{{ fw7Meta.icon|default('fa-bug')}}"></ons-toolbar-button>
         </div>
 
         <div class="center">
@@ -35,8 +35,8 @@
 
 
     {#    {% set toolbarContent = block('toolbar')|default(false) %} #}
-    {% if onsMeta.isPage %}
-        <ons-toolbar id="{{ onsMeta.templateId }}-toolbar">
+    {% if fw7Meta.isPage %}
+        <ons-toolbar id="{{ fw7Meta.templateId }}-toolbar">
             {% block toolbar %}
                 <div class="left">
                     <ons-back-button></ons-back-button>
@@ -48,7 +48,7 @@
 
                 <div class="center" {{ stimulus_target(_app_sc,'pageTitle') }}>
 
-                    {{ onsMeta.templateId|trans|title }}
+                    {{ fw7Meta.templateId|trans|title }}
                 </div>
                 <div class="right">
 
@@ -65,7 +65,7 @@
     <p>
         This is the {{ _self }} page, served from twig. {{ 'now'|date }}.
     </p>
-        <pre>{{ onsMeta|json_pretty }}</pre>
+        <pre>{{ fw7Meta|json_pretty }}</pre>
         {% endif %}
         {% block body %}
         {% endblock %}
