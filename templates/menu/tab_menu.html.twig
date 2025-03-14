@@ -18,7 +18,10 @@
 
 
     {# tab-link-active class ? #}
-    <a href="{{ item.uri }}" title="{{ item.uri }}" class="tab-link ">
+
+    <a href="#view-{{ item.name }}"
+{#{{ item.uri }}" #}
+    title="{{ item.uri }}" class="tab-link ">
         <i class="icon f7-icons if-not-md">house_fill</i>
         <twig:ux:icon name="{{ icon }}" />
         {# during debug, display the uri.  @todo: open in new tab for debugging #}

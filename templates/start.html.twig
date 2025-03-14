@@ -7,34 +7,67 @@
 
 
 {% block templates %}
-    {% for code, template in templates|default([]) %}
-        <div id="view-{{ code }}">
 
-        <div class="page" data-name="page-{{ code }}">
-            <div class="navbar">
-                <div class="navbar-bg"></div>
-                <div class="navbar-inner sliding">
-                    <div class="left">
-                        <a href="#" class="link back">
-                            <i class="icon icon-back"></i>
-                            <span class="if-not-md">Back</span>
-                        </a>
-                    </div>
-                    <div class="title">{{ code|upper }}</div>
-                </div>
-            </div>
-            <div class="page-content">
-                <div class="block-title">@get from meta</div>
-                <div class="block">
-                    {{ template|raw }}
+<div class="views tabs safe-areas">
+    <!-- Tabbar for switching views-tabs -->
 
-                </div>
-            </div>
+    <div class="toolbar toolbar-bottom tabbar-icons">
+        <div class="toolbar-inner">
+
+            {{ component('mobile_menu', {type: MOBILE_TAB_MENU, caller: _self}) }}
         </div>
+    </div>
+
+    <!--
+      Tabbar for switching views-tabs. Should be a first child in Views.
+      Additional "toolbar-bottom" class to set it on bottom
+    -->
+{#    <div class="toolbar tabbar toolbar-bottom">#}
+{#        <div class="toolbar-inner">#}
+{#        {% for code, template in templates|default([]) %}#}
+{#            <a href="#view-{{ code }}" class="tab-link {{ loop.first ? 'tab-link-active' }}">#}
+{#                <i class="icon icon-home"></i>#}
+{#                @icon#}
+{#                <code>{{ code }}</code>#}
+{#            </a>#}
+{#        {% endfor %}#}
+{#        </div>#}
+        {% for code, template in templates|default([]) %}
+        <!-- Your main view/tab, should have "view-main" class. It also has "tab-active" class -->
+        <div id="view-{{ code }}" class="view tab {{ loop.first ? 'tab-active view-main '  }}">
+            <code>{{ code }}</code>
+            {{ template|raw }}
         </div>
+        {% endfor %}
+    </div>
 
+{#    {% for code, template in templates|default([]) %}#}
+{#        <div id="view-{{ code }}">#}
 
-    {% endfor %}
+{#        <div class="page" data-name="page-{{ code }}">#}
+{#            <div class="navbar">#}
+{#                <div class="navbar-bg"></div>#}
+{#                <div class="navbar-inner sliding">#}
+{#                    <div class="left">#}
+{#                        <a href="#" class="link back">#}
+{#                            <i class="icon icon-back"></i>#}
+{#                            <span class="if-not-md">Back</span>#}
+{#                        </a>#}
+{#                    </div>#}
+{#                    <div class="title">{{ code|upper }}</div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="page-content">#}
+{#                <div class="block-title">@get from meta</div>#}
+{#                <div class="block">#}
+{#                    {{ template|raw }}#}
+
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#        </div>#}
+
+{#    {% endfor %}#}
 {% endblock %}
 
   {% block body %}
