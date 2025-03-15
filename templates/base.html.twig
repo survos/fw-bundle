@@ -9,7 +9,7 @@
 
     {#        <meta http-equiv="Content-Security-Policy" content="default-src * data: gap: https://ssl.gstatic.com; style-src * 'unsafe-inline'; script-src * 'unsafe-inline' 'unsafe-eval'">#}
     {% block stylesheets %}
-        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/survosFw/style.css') }}" ></link>
+{#        <link rel="stylesheet" type="text/css" href="{{ asset('bundles/survosFw/style.css') }}" ></link>#}
     {% endblock %}
 
     {% block javascripts %}
@@ -29,40 +29,8 @@
 {% block body %}{% endblock %}
 {#</div>#}
 
-{# these are defined by the child page #}
+{# these are defined by the child page (start.html.twig) #}
 {{ block('templates') }}
-
-{#<template id="layout">#}
-{#    <ons-toolbar id="{{ pageId|default('index') }}-toolbar">#}
-{#        <div class="left">#}
-{#            <ons-back-button></ons-back-button>#}
-{#        </div>#}
-
-{#        <div class="left">#}
-{#            #}{# what is this for? profile? #}
-{#            <ons-toolbar-button icon="fa-user"></ons-toolbar-button>#}
-{#        </div>#}
-
-{#        <div class="center" {{ stimulus_target(_app_sc,'page_title') }}>#}
-{#            page_title#}
-{#            {{ pageId|default('index') }}#}
-{#        </div>#}
-{#        <div class="right">#}
-{#            <ons-toolbar-button>-</ons-toolbar-button>#}
-{#            <ons-toolbar-button>+</ons-toolbar-button>#}
-{#        </div>#}
-{#    </ons-toolbar>#}
-
-{#    <button hidden class="btn btn-lg btn-success " {{ stimulus_controller('@pwa/install') }} {{ stimulus_action('@pwa/install', 'install', 'click') }} {{ stimulus_target('@pwa/install', 'install') }}>#}
-{#        Install#}
-{#    </button>#}
-{#    <div class="alert alert-info" role="alert" {{ stimulus_controller('@pwa/connection-status') }}>#}
-{#                    <span {{ stimulus_target('@pwa/connection-status', 'message') }}>#}
-{#                        We are trying to guess what is the current status of your Internet connection#}
-{#                    </span>#}
-{#    </div>#}
-
-{#</template>#}
 
 </body>
 </html>

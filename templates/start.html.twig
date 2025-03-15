@@ -10,10 +10,8 @@
 
 <div class="views tabs safe-areas">
     <!-- Tabbar for switching views-tabs -->
-
     <div class="toolbar toolbar-bottom tabbar-icons">
         <div class="toolbar-inner">
-
             {{ component('mobile_menu', {type: MOBILE_TAB_MENU, caller: _self}) }}
         </div>
     </div>
@@ -70,10 +68,11 @@
 {#    {% endfor %}#}
 {% endblock %}
 
-  {% block body %}
-{#      {{ block('initial_layout_template') }}#}
+{% block body %}
+      {{ block('initial_layout_template') }}
 {% endblock %}
-  {% block xbody %}
+
+{% block ons_body %}
 
 {#      {{ block('templates') }}#}
       {{ block('initial_layout_template') }}

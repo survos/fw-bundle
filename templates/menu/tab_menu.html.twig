@@ -28,12 +28,12 @@
 {#        <span class="tabbar-label">{{ label }}</span>#}
         <span class="tabbar-label">{{ item.uri }}</span>
     </a>
-{#    <a target="_blank" href="{{ item.uri }}">#}
-{#        <code>{{ item.uri }}#}
-{#            <twig:ux:icon name="tabler:bug" />#}
-{#        </code>#}
+    <a target="_blank" href="{{ item.uri }}">
+        <code>{{ item.uri }}
+            <twig:ux:icon name="tabler:bug" />
+        </code>
 
-{#    </a>#}
+    </a>
 
 {#    <ons-tab page="{{ item.name }}" label="{{ label|title }}"#}
 {#        {{ stimulus_target('app','tab') }}#}
