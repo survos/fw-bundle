@@ -54,7 +54,6 @@ export default class extends Controller {
 
     initialize() {
         super.initialize();
-        console.error("adding a listener");
         document.addEventListener('ons-tabbar:init', function (event) {
             var tabBar = event.component;
             console.error(tabBar);
@@ -85,8 +84,8 @@ export default class extends Controller {
         //     // console.warn("ons is ready, " + this.identifier)
         // });
 
-        // https://stackoverflow.com/questions/26851516/how-to-open-page-with-ons-tabbar-and-display-specific-tab
-        ['init', 'show', 'hide', 'precache'].forEach(eventName =>
+        // https://framework7.io/docs/page#page-events
+        ['init', 'show', 'hide', 'precache',"page:afterin"].forEach(eventName =>
             document.addEventListener(eventName, (e) => {
                 // console.error('%s:%s / %o', e.type, e.target.getAttribute('id'), e.target);
                 // console.info('%s received for %s %o', e.type, e.target.getAttribute('id'), e.target);
@@ -95,7 +94,21 @@ export default class extends Controller {
                     let tabPageName = tabItem.getAttribute('page');
                     let eventType = tabPageName + '.' + e.type;
                     console.log('dispatching ' + eventType);
+                    console.log(e.detail.tabItem);
                     document.dispatchEvent(new CustomEvent(eventType, {'detail': e}));
+                }
+                //catch page after in
+                if (e.type === 'page:afterin') {
+                    let pageName = e.detail.name;
+                    //add id to event detail
+                    if (e.detail && e.detail.route && e.detail.route.params) {
+                        e.detail.id = e.detail.route.params.id;
+                    }
+                    document.dispatchEvent(new CustomEvent(e.detail.route.params.page + ".refresh", 
+                        {
+                            'detail': e.detail,
+                        }
+                    ));
                 }
             })
         );
@@ -129,6 +142,7 @@ export default class extends Controller {
             }
         );
 
+        // these look like onsen events!
         this.navigatorTarget.addEventListener('prepush', this.eventPreDebug);
         this.navigatorTarget.addEventListener('prepop', this.eventPreDebug);
         this.navigatorTarget.addEventListener('postpush', this.eventPostDispatch);

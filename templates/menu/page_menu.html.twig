@@ -3,41 +3,54 @@
 {% block root %}
     <!-- {{ _self }} -->
     {% set listAttributes = item.childrenAttributes %}
-    {{ block('list') -}}
+
+    <div class="list menu-list">
+        <ul>
+            {{ block('list') -}}
+        </ul>
+    </div>
+
 {% endblock %}
 
 {% block heading %}
-<ons-list-title style="margin-top: 10px">{{ item.label }}</ons-list-title>
+    !!!
+    {{ item.label }}
 {% endblock %}
 
 {% block item %}
     {% set icon = item.attributes.icon|default('fa-question-mark') %}
     {% set badge = item.extras.badge|default(false) %}
     {% set route = item.name %} {#  really the pageId that's loaded #}
+
     {% if item.attributes.style|default('') == 'header' %}
         {{ block('heading') }}
     {% else %}
-            {% if item.linkAttributes.target|default('') == '_blank' %}
+        {% if item.linkAttributes.target|default('') == '_blank' %}
                 <a target="_blank" href="{{ item.uri }}">
                     {{ block('label') }}
                 </a>
-                {% else %}
-        <ons-list-item
-            {{ stimulus_action('app', 'loadPage', 'click', {
-                route: route,
-                extras: item.extras
-            }) }}
-        {% endif %}
-    >
-        {% endif %}
-        {% if icon %}
-        <div class="left">
-            <ons-icon icon="{{ icon }}" class="list-item__icon"></ons-icon>
-        </div>
-        {% endif %}
+        {% else %}
+            <li>
+                <a href="{{ item.uri }}" class="item-content item-link panel-close">
+                    {% if icon %}
+                    <div class="item-media">
+                        <twig:ux:icon name="{{icon}}" />
+                    </div>
+                    {% endif %}
+                    <div class="item-inner">
+                        <div class="item-title">
+                        {# {{ route }} #}
+                        {{ item.label|trans }}
+                        </div>
+                    </div>
+                </a>
 
-        {{ item.label|trans }}
-    </ons-list-item>
+            </li>
+
+        {% endif %}
+    
+    {% endif %}
+        
 
 {% endblock %}
 

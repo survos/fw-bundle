@@ -17,6 +17,27 @@
     {% set code = item.name %}
 
 
+    <a href="#tab-{{ item.name }}" title="{{ item.uri }}" class="tab-link ">
+        <twig:ux:icon name="{{icon}}" />
+        <span class="tabbar-label">
+            {{ item.label|title }}
+        </span>
+    </a>
+    
+{% endblock %}
+
+
+{% block itemold %}
+    {% set icon = item.attributes.icon|default('fa-question-mark') %}
+    {% set badge = item.extras.badge|default(false) %}
+    {% set label = item.label %}
+    {% set domain = item.extras.translation_domain|default(false) %}
+    {% if domain %}
+    {% set label = label|trans({}, domain ) %}
+    {% endif %}
+    {% set code = item.name %}
+
+
     {# tab-link-active class ? #}
 
     <a href="#view-{{ item.name }}"

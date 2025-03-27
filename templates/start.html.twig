@@ -5,166 +5,111 @@
     {{ parent() }}
 {% endblock %}
 
-
-{% block templates %}
-
-<div class="views tabs safe-areas">
-    <!-- Tabbar for switching views-tabs -->
-    <div class="toolbar toolbar-bottom tabbar-icons">
-        <div class="toolbar-inner">
-            {{ component('mobile_menu', {type: MOBILE_TAB_MENU, caller: _self}) }}
-        </div>
-    </div>
-
-    <!--
-      Tabbar for switching views-tabs. Should be a first child in Views.
-      Additional "toolbar-bottom" class to set it on bottom
-    -->
-{#    <div class="toolbar tabbar toolbar-bottom">#}
-{#        <div class="toolbar-inner">#}
-{#        {% for code, template in templates|default([]) %}#}
-{#            <a href="#view-{{ code }}" class="tab-link {{ loop.first ? 'tab-link-active' }}">#}
-{#                <i class="icon icon-home"></i>#}
-{#                @icon#}
-{#                <code>{{ code }}</code>#}
-{#            </a>#}
-{#        {% endfor %}#}
-{#        </div>#}
-        {% for code, template in templates|default([]) %}
-        <!-- Your main view/tab, should have "view-main" class. It also has "tab-active" class -->
-        <div id="view-{{ code }}" class="view tab {{ loop.first ? 'tab-active view-main '  }}">
-            <code>{{ code }}</code>
-            {{ template|raw }}
-        </div>
-        {% endfor %}
-    </div>
-
-{#    {% for code, template in templates|default([]) %}#}
-{#        <div id="view-{{ code }}">#}
-
-{#        <div class="page" data-name="page-{{ code }}">#}
-{#            <div class="navbar">#}
-{#                <div class="navbar-bg"></div>#}
-{#                <div class="navbar-inner sliding">#}
-{#                    <div class="left">#}
-{#                        <a href="#" class="link back">#}
-{#                            <i class="icon icon-back"></i>#}
-{#                            <span class="if-not-md">Back</span>#}
-{#                        </a>#}
-{#                    </div>#}
-{#                    <div class="title">{{ code|upper }}</div>#}
-{#                </div>#}
-{#            </div>#}
-{#            <div class="page-content">#}
-{#                <div class="block-title">@get from meta</div>#}
-{#                <div class="block">#}
-{#                    {{ template|raw }}#}
-
-{#                </div>#}
-{#            </div>#}
-{#        </div>#}
-{#        </div>#}
-
-{#    {% endfor %}#}
-{% endblock %}
+{# this is one approach, but we're not using it now.  Instead, look at the body to load the initial page #}
 
 {% block body %}
-      {{ block('initial_layout_template') }}
-{% endblock %}
+    
+        {% set globals = {
+            config: config,
+        } %}
+        <twig:dexie
+                :initDb="true"
+                refreshEvent="dexie:load"
+                :globals="globals"
+                :store="{}|json_encode"
+                :filter="{}"
+                :caller="_self">
+{#            <twig:block name="title">#}
+{#                Loading {{ store.url }}#}
+{#            </twig:block>#}
 
-{% block ons_body %}
+            <twig:block name="twig_template" id="hack_to_get_raw_data">
+{#                {% set url = globals.store.url %}#}
+{#                <code>{{ globals.store.schema }}</code>#}
+{#                @todo: a loading gauge / progress bar for#}
+{#                <a href="{{ url }}">{{ globals.store.url }}</a>#}
+                <!-- hack_to_get_raw_data -->
+            </twig:block>
 
-{#      {{ block('templates') }}#}
-      {{ block('initial_layout_template') }}
-
-      <ons-splitter>
-          <!-- The side menu -->
-          <ons-splitter-side
-                  label="menu"
-                  icon="users"
-                  id="menu" collapse {{ stimulus_target('app','menu') }}>
-              <ons-page>
-                  <ons-list>
-
-                      {{ component('mobile_menu', {type: MOBILE_PAGE_MENU, caller: _self}) }}
-
-                      <ons-list-item {{ stimulus_action('app', 'clear', 'click') }}>
-                          Clear local storage
-                      </ons-list-item>
-                      <ons-list-item {{ stimulus_action('app', 'close', 'click') }}>
-                          Exit
-                      </ons-list-item>
-
-                  </ons-list>
-              </ons-page>
-          </ons-splitter-side>
-
-          <!-- Everything not in the side menu -->
-          <ons-splitter-content>
-              <!-- https://onsen.io/v2/api/js/ons-navigator.html -->
-              <!-- navigates pages, not tabs.  -->
-              <ons-navigator
-                      id="navigator"
-                      {{ stimulus_target(_app_sc, 'navigator') }}
-                      page="initial-layout"
-              > <!-- the starting page -->
-
-              </ons-navigator>
-          </ons-splitter-content>
-      </ons-splitter>
+        </twig:dexie>
 
 
-  {% endblock %}
-{% block initial_layout_template %}
-    block initial_layout_template
+
+    {% set iconMap = dictionary('tab_icons') %}
     <div id="app" {{ stimulus_controller('app') }}>
 
         <!-- Your main view, should have "view-main" class -->
-        <div class="view view-main">
+        <div class="view view-main view-init safe-areas">
             <!-- Initial Page, "data-name" contains page name -->
             <div data-name="home" class="page">
 
                 <!-- Top Navbar -->
                 <div class="navbar">
-                    <div class="navbar-bg"></div>
+
+                    <div class="navbar-bg">
+
+                    </div>
                     <div class="navbar-inner">
-                        <div class="title">in {{ _self }}</div>
+                        <img style="max-height: 100%" src="{{ app_logo }}" alt="">
+                        <div class="title">{{ app_name }}</div>
+                    </div>
+                </div>
+
+                <div class="page-content">
+
+
+                
+                    <div style="display: flex; justify-content: center; align-items: center; height: 100%;" id="dataProgress">
                     </div>
                 </div>
 
                 <!-- Bottom Toolbar -->
-                <div class="toolbar toolbar-bottom tabbar-icons">
+                <div class="toolbar tabbar toolbar-bottom">
                     <div class="toolbar-inner">
-                        {{ component('mobile_menu', {type: MOBILE_TAB_MENU, caller: _self}) }}
+                        {% for t in config.tabs %}
+                        <a href="#tab-{{ t }}" title="#tab-{{ t }}" class="tab-link ">
+                            <twig:ux:icon name="{{iconMap[t]|default('tabler:bug')}}" />
+                            {% if app.request.get('debug', false) %}<code>{{ t }}</code>{% endif %}
+                            <span class="tabbar-label">
+            {{ 'tab.%s'|format(t)|trans|title }}
+        </span>
+                        </a>
 
-{#                        <a href="#view-home" class="tab-link tab-link-active">#}
-{#                            <i class="icon f7-icons if-not-md">house_fill</i>#}
-{#                            <twig:ux:icon name="tabler:home-filled" />#}
-{#                            <span class="tabbar-label">Home</span>#}
-{#                        </a>#}
-{#                        <a href="#view-catalog" class="tab-link">#}
-{#                            <i class="icon f7-icons if-not-md">square_list_fill</i>#}
-{#                            <i class="icon material-icons if-md">view_list</i>#}
-{#                            <span class="tabbar-label">Catalog</span>#}
-{#                        </a>#}
-{#                        <a href="#view-settings" class="tab-link">#}
-{#                            <i class="icon f7-icons if-not-md">gear</i>#}
-{#                            <i class="icon material-icons if-md">settings</i>#}
-{#                            <span class="tabbar-label">Settings</span>#}
-{#                        </a>#}
+                        {% endfor %}
+{#                        {{ component('mobile_menu', {type: MOBILE_TAB_MENU, caller: _self}) }}#}
                     </div>
                 </div>
 
-
-                <!-- Scrollable page content -->
-                <div class="page-content">
-                    <p>Page content goes here</p>
-                    <!-- Link to another page -->
-                    <a href="{{ path('app_page', {page: 'about'}) }}">About app (/pages)</a>
+                <div class="tabs">
+                    {% for t in config.tabs %}
+                        <div id="tab-{{ t }}" class="page-content tab">
+                                {{ include('tabs/%s.html.twig'|format(t), {t: t}) }}
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
     </div>
 
+
+{% endblock %}
+
+{% block templates_experiment %}
+    <div class="views tabs safe-areas">
+        <!-- Tabbar for switching views-tabs -->
+        <div class="toolbar toolbar-bottom">
+            <div class="toolbar-inner">
+                {{ component('mobile_menu', {type: MOBILE_TAB_MENU, caller: _self}) }}
+            </div>
+        </div>
+
+        {% for code, template in templates|default([]) %}
+            <!-- Your main view/tab, should have "view-main" class. It also has "tab-active" class -->
+            <div id="view-{{ code }}" class="view tab {{ loop.first ? 'tab-active view-main '  }}">
+                <code>{{ code }}</code>
+                {{ template|raw }}
+            </div>
+        {% endfor %}
+    </div>
 
 {% endblock %}

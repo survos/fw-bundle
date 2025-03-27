@@ -20,7 +20,13 @@ class KnpMenuEvent extends Event
         protected FactoryInterface $factory,
         private array $options = [],
         private array $childOptions = [],
+        private ?string $configCode=null,
     ) {
+    }
+
+    public function getConfigCode(): ?string
+    {
+        return $this->configCode;
     }
 
     static public function getConstants(): array
