@@ -104,7 +104,7 @@ export default class extends Controller {
                     if (e.detail && e.detail.route && e.detail.route.params) {
                         e.detail.id = e.detail.route.params.id;
                     }
-                    document.dispatchEvent(new CustomEvent(e.detail.route.params.page + ".refresh", 
+                    document.dispatchEvent(new CustomEvent(e.detail.route.params.page + ".refresh",
                         {
                             'detail': e.detail,
                         }
@@ -178,7 +178,8 @@ export default class extends Controller {
     setTitle(title) {
         // only PAGE title change, not tabs
         console.assert(this.hasPageTitleTarget, "missing page title target")
-        this.pageTitleTarget.innerHTML = title;
+        this.pageTitleTarget.innerHTML = title.trim();
+        this.titleTarget.innerHTML = title;
         // console.assert(this.hasTitleTarget, "missing titleTarget")
         // this.titleTarget.innerHTML = title;
     }

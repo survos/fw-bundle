@@ -50,7 +50,9 @@ class SurvosFwBundle extends AbstractBundle implements CompilerPassInterface
 
         $builder->register(FwService::class)
             ->setAutowired(true)->setAutoconfigured(true)->setPublic(true)
-            ->setArgument('$configs', $config['projects']);
+            ->setArgument('$configs', $config['projects']) // ??
+            ->setArgument('$config', $config)
+        ;
 
         $builder->register(FwPage::class)
             ->setAutowired(true)->setAutoconfigured(true)->setPublic(true);
@@ -182,8 +184,13 @@ class SurvosFwBundle extends AbstractBundle implements CompilerPassInterface
         $rootNode =  $definition->rootNode();
         $rootNode
             ->children()
+            ->scalarNode('name')
+                ->info("The app name when initializing Framework7")
+                ->defaultValue('FwApp')
+            ->end()
             ->scalarNode('theme')->defaultValue('pagestack')->end()
             ->booleanNode('enabled')->defaultTrue()->end()
+            ->booleanNode('debug')->defaultTrue()->end()
             ->end();
 
         $this->addProjectsSection($rootNode->children());

@@ -1,17 +1,39 @@
 {% extends "@SurvosFw/base.html.twig" %}
 
 {% block stylesheets %}
-{#    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/survosFw/style.css') }}" />#}
+   {# <link rel="stylesheet" type="text/css" href="{{ asset('bundles/survosFw/style.css') }}" /> #}
     {{ parent() }}
 {% endblock %}
 
 {# this is one approach, but we're not using it now.  Instead, look at the body to load the initial page #}
 
 {% block body %}
-    
+{# custom css start #}
+<style>
+.ios {
+    --f7-navbar-height: 62px; 
+    --f7-toolbar-height: 60px;
+}
+
+.ios .navbar a.icon-only {
+    height: 38px;
+    width: 38px;
+    background-color: var(--f7-page-bg-color);
+    border-radius: 0.25rem;
+}
+
+.tabbar .tab-link {
+    gap: 4px;
+}
+</style>
+{# custom css end #}
+
         {% set globals = {
             config: config,
+            configCode: configCode,
+            locale: app.request.locale,
         } %}
+
         <twig:dexie
                 :initDb="true"
                 refreshEvent="dexie:load"
@@ -32,11 +54,80 @@
             </twig:block>
 
         </twig:dexie>
-
-
-
     {% set iconMap = dictionary('tab_icons') %}
-    <div id="app" {{ stimulus_controller('app') }}>
+    <div id="app" {{ stimulus_controller(_app_sc, {
+        config: appConfig,
+        configCode : configCode,
+        locale: app.request.locale,
+    }) }}>
+        <div class="panel panel-left">
+
+            <div class="popover my-popover">
+                <div class="popover-inner">
+                    <div class="list inset list-strong list-dividers-ios">
+                        <ul>
+                            From AppConfig: {{ appConfig.name }}
+                            <!-- loop over enabled_locales -->
+                            {% for locale in app.enabled_locales %}
+                                <li>
+                                    <a class="external list-button" href="{{ url('project_start', {configCode: config.code, _locale: locale}) }}">
+                                        {{ locale|language_name(locale) }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="list inset list-strong">
+                        <ul>
+                            <li><a class="list-button color-red popover-close">Cancel</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="list menu-list">
+                <ul>
+                    <li>
+                        <a href="#" class="item-content item-link popover-open" data-popover=".my-popover">
+                            <div class="item-media">
+                                <twig:ux:icon name="tabler:language-katakana" />
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">{{ ('language'|trans)|title }}</div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" id="refreshDatabase"  class="item-content item-link">
+                            <div class="item-media">
+                                <twig:ux:icon name="tabler:refresh-dot" />
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Refresh</div>
+                            </div>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="{{ url('app_index') }}" class="item-content item-link external">
+                            <div class="item-media">
+                                <twig:ux:icon name="tabler:home" />
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-title">Projects Home</div>
+                            </div>
+                        </a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right panel -->
+        <div class="panel panel-right">
+            <div class="view view-init panel-view" data-name="panel-view">
+            </div>
+        </div>
 
         <!-- Your main view, should have "view-main" class -->
         <div class="view view-main view-init safe-areas">
@@ -45,20 +136,32 @@
 
                 <!-- Top Navbar -->
                 <div class="navbar">
-
-                    <div class="navbar-bg">
-
-                    </div>
+                    <div class="navbar-bg"></div>
                     <div class="navbar-inner">
-                        <img style="max-height: 100%" src="{{ app_logo }}" alt="">
-                        <div class="title">{{ app_name }}</div>
+                        <div class="left">
+                            <div>
+                                <a href="#" class="link icon-only panel-open" data-panel="left">
+                                    <twig:ux:icon width="25px" name="tabler:menu-2" />
+                                </a>
+                            </div>
+                        </div>
+                        <img style="max-height: 100%;height: 44px;" src="{{ globals.config.logo }}" alt="">
+                        <div class="title" {{ stimulus_target(_app_sc, 'title') }}>
+                            {# {{ globals.config.name }} #}
+                        </div>
+                        <div class="right">
+                            <a href="#" class="link icon-only panel-open" data-panel="right">
+                                <twig:ux:icon width="25px" name="tabler:info-square-rounded" />
+                            </a>
+                        </div>
                     </div>
                 </div>
 
                 <div class="page-content">
+                    <div {{ stimulus_target(_app_sc, 'pageTitle') }}>
 
+                    </div>
 
-                
                     <div style="display: flex; justify-content: center; align-items: center; height: 100%;" id="dataProgress">
                     </div>
                 </div>
@@ -67,10 +170,10 @@
                 <div class="toolbar tabbar toolbar-bottom">
                     <div class="toolbar-inner">
                         {% for t in config.tabs %}
-                        <a href="#tab-{{ t }}" title="#tab-{{ t }}" class="tab-link ">
-                            <twig:ux:icon name="{{iconMap[t]|default('tabler:bug')}}" />
+                        <a href="#tab-{{ t }}" title="#tab-{{ t }}" class="tab-link">
+                            <twig:ux:icon name="{{iconMap[t]|default('tabler:bug')}}" width="25px" />
                             {% if app.request.get('debug', false) %}<code>{{ t }}</code>{% endif %}
-                            <span class="tabbar-label">
+                            <span class="tabbar-label mt-2">
             {{ 'tab.%s'|format(t)|trans|title }}
         </span>
                         </a>
