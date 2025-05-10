@@ -11,7 +11,7 @@
 {# custom css start #}
 <style>
 .ios {
-    --f7-navbar-height: 62px; 
+    --f7-navbar-height: 62px;
     --f7-toolbar-height: 60px;
 }
 
@@ -54,7 +54,11 @@
             </twig:block>
 
         </twig:dexie>
+    {% guard function dictionary %}
     {% set iconMap = dictionary('tab_icons') %}
+    {% else  %}
+    {% set iconMap = [] %}
+    {% endguard %}
     <div id="app" {{ stimulus_controller(_app_sc, {
         config: appConfig,
         configCode : configCode,
@@ -71,7 +75,11 @@
                             {% for locale in app.enabled_locales %}
                                 <li>
                                     <a class="external list-button" href="{{ url('project_start', {configCode: config.code, _locale: locale}) }}">
-                                        {{ locale|language_name(locale) }}
+                                        {%guard function language_name %}
+                                            {{ locale|language_name(locale) }}
+                                        {% else %}
+                                            {{ locale }}
+                                        {% endguard %}
                                     </a>
                                 </li>
                             {% endfor %}

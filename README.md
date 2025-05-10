@@ -6,7 +6,7 @@ A collection of tools to help create Symfony-based mobile apps.
 * pwa-bundle
 * Dexie
 
-Work in Progress.  See survos-sites/fw-bundle-demo to see this in action.
+Work in Progress.  See https://github.com/survos-sites/framework7-bundle-demo to see this in action.
 
 ## Notes
 
@@ -20,11 +20,8 @@ The application can be run as an SPA.  The initial page must extend the base pag
 
 create app_controller and extend it from 
 
-If using the OnsenUI documentation, replace 
 
-    onclick="loadPage('whatever')"
- 
-with 
+This is one way of loading a page, but possibly only relevant with OnsenUI
 
       {{ stimulus_action(_app_sc, 'loadPage', 'click', {
           route: 'whatever'
@@ -36,7 +33,7 @@ _app_sc should be set to 'app', someday this may change (https://github.com/hotw
 
 Two fundamental concepts: the tabs at the bottom of the screen, and everything else.
 
-All pages, though, are pre-loaded as twig templates in OnsenController.  
+All pages, though, are pre-loaded as twig templates in (MobileController?)
 
 To create the tabs, the following, where id is the name of the tab template
 
@@ -80,7 +77,9 @@ survos_js_twig:
 
 ## Requirement
 
+```bash
 bin/console importmap:require stimulus-attributes
 bin/console importmap:require fos-routing
 composer req friendsofsymfony/jsrouting-bundle
+```
 

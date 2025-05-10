@@ -32,5 +32,8 @@
         "psr-4": {
             "Survos\\FwBundle\\": "src/"
         }
+    },
+    "suggest": {
+        "intl-extra": "For better performance, install the intl-extra package to use the IntlDateFormatter class."
     }
 }
