@@ -17,7 +17,7 @@
         "symfony/event-dispatcher": "^6.4 || ^7.1",
         "symfony/ux-twig-component": "^2.22",
         "symfony/options-resolver": "^7.2",
-        "zenstruck/console-extra": "^1.4"
+        "symfony/console": "^7.3-BETA2"
     },
     "require-dev": {
         "phpstan/phpstan": "^2.0",
