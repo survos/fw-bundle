@@ -14,18 +14,20 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Http\Impersonate\ImpersonateUrlGenerator;
 use function Symfony\Component\String\u;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 
 class MenuService implements KnpMenuHelperInterface
 {
     use KnpMenuHelperTrait;
 
     public function __construct(
+        #[Autowire('%kernel.environment%')] protected string $env,
         private ?Security $security,
         private ?ImpersonateUrlGenerator $impersonateUrlGenerator,
         private string $routeRequirementsFilename,
         private ?AuthorizationCheckerInterface $authorizationChecker=null,
         private ?AuthService $authService=null,
-        private array $usersToImpersonate=[]
+        private array $usersToImpersonate=[],
     )
     {
 

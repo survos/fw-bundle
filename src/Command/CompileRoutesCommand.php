@@ -33,7 +33,7 @@ final class CompileRoutesCommand
     ): int
     {
         // iterate through the page and tab routes to create templates, which will be rendered in the main page.
-        $menu = $this->factory->createItem($eventName ?? KnpMenuEvent::class);
+        $menu = $this->factory->createItem($eventName);
         foreach ([KnpMenuEvent::MOBILE_TAB_MENU  => 'tab',
                      KnpMenuEvent::MOBILE_PAGE_MENU => 'page',
                      KnpMenuEvent::MOBILE_UNLINKED_MENU => 'page',
@@ -44,7 +44,7 @@ final class CompileRoutesCommand
 
                 ])
                 ->resolve($options);
-            $this->eventDispatcher->dispatch(new KnpMenuEvent($menu, $this->factory, $options), $eventName);
+            $this->eventDispatcher->dispatch(new KnpMenuEvent($menu, $this->factory, $options));
             foreach ($menu->getChildren() as $route=>$child) {
                 try {
                     $template = "$type/$route.html.twig";

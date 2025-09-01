@@ -18,6 +18,7 @@
     {% endblock %}
 
     {% block pwa %}
+        {{ pwa(locale=app.request.locale) }}
     {% endblock %}
 
 </head>
