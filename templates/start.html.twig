@@ -36,8 +36,10 @@
 
 
     {% set _sc = 'pwa/install' %}
-    {{ stimulus_controller(_sc ~ ' install-status') }}
+    {# {{ stimulus_controller(_sc ~ ' install-status') }}
     {{ stimulus_action(_sc, 'not-installed', 'click') }}
+    #}
+    <!--
     <button {{ stimulus_action('pwa/install', 'install') }}>
         Install
     </button>
@@ -62,6 +64,7 @@
     >
         Install this app
     </button>
+    -->
 
     <twig:dexie
                 :initDb="true"
