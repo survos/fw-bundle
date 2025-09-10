@@ -141,6 +141,7 @@ export default class extends Controller {
                         debug.events('🎯 Complete event detail: %o', e.detail);
 
                         // Pass the complete detail object - let the dexie controller parse it
+                        e.detail.id = e.detail.route.params.id;
                         document.dispatchEvent(new CustomEvent(refreshEventName, {
                             'detail': e.detail  // Pass the complete Framework7 page object
                         }));
