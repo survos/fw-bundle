@@ -12,7 +12,7 @@
         "symfony/dependency-injection": "^7.3",
         "symfony/http-kernel": "^7.3",
         "twig/twig": "^3.4",
-        "survos/core-bundle": "^1.5",
+        "survos/core-bundle": "^2.0",
         "knplabs/knp-menu-bundle": "^3.2",
         "symfony/event-dispatcher": "^7.3",
         "symfony/ux-twig-component": "^2.8",
