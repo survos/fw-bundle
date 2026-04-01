@@ -2,7 +2,7 @@
 
 namespace Survos\FwBundle;
 
-use Survos\CoreBundle\Traits\HasAssetMapperTrait;
+use Survos\CoreBundle\Bundle\AssetMapperBundle;
 use Survos\FwBundle\Command\CompileRoutesCommand;
 use Survos\FwBundle\Components\FwPage;
 use Survos\FwBundle\Event\KnpMenuEvent;
@@ -17,11 +17,9 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
-
-class SurvosFwBundle extends AbstractBundle implements CompilerPassInterface
+class SurvosFwBundle extends AssetMapperBundle implements CompilerPassInterface
 {
-    use HasAssetMapperTrait;
+    public const ASSET_PACKAGE = 'fw';
 
     public function build(ContainerBuilder $container): void
     {
@@ -195,14 +193,4 @@ class SurvosFwBundle extends AbstractBundle implements CompilerPassInterface
         $this->addProjectsSection($rootNode->children());
 
     }
-
-    public function getPaths(): array
-    {
-        $dir = realpath(__DIR__ . '/../assets/');
-        assert(file_exists($dir), 'asset path must exist for the assets in ' . __DIR__);
-        return [$dir => '@survos/fw'];
-    }
-
-
-
 }

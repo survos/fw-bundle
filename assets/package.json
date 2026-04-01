@@ -1,5 +1,5 @@
 {
-  "name": "@survos/mobile-bundle",
+  "name": "@survos/fw",
   "description": "integrate onsonui and other libraries with Symfony",
   "license": "MIT",
   "version": "1.0.5",
@@ -10,8 +10,7 @@
         "webpackMode": "eager",
         "fetch": "lazy",
         "enabled": true,
-        "autoimport": {
-        }
+        "autoimport": {}
       }
     },
     "importmap": {
@@ -24,6 +23,5 @@
   "devDependencies": {
     "@hotwired/stimulus": "^3.2.2"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }
