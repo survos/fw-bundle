@@ -15,7 +15,7 @@
         "survos/core-bundle": "^2.0",
         "knplabs/knp-menu-bundle": "^3.2",
         "symfony/event-dispatcher": "^7.4||^8.0",
-        "symfony/ux-twig-component": "^2.8",
+        "symfony/ux-twig-component": "^2.0|^3.0",
         "symfony/options-resolver": "^7.4||^8.0",
         "symfony/console": "^7.4||^8.0"
     },
