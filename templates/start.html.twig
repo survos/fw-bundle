@@ -181,7 +181,7 @@
                         {% for t in config.tabs %}
                         <a href="#tab-{{ t }}" title="#tab-{{ t }}" class="tab-link">
                            <twig:ux:icon name="{{ t | default('tabler:bug')  }}"  width="25px" />
-                            {% if app.request.get('debug', false) %}<code>{{ t }}</code>{% endif %}
+                            {% if app.request.query.get('debug', false) %}<code>{{ t }}</code>{% endif %}
                             <span class="tabbar-label mt-2">
             {{ 'tab.%s'|format(t)|trans|title }}
         </span>

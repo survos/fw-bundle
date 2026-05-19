@@ -61,7 +61,7 @@
     {% endif %}
 
     <div class="content" {{ stimulus_target('app', 'content') }}>
-{% if app.request.get('debug') %}
+{% if app.request.query.get('debug') %}
     <p>
         This is the {{ _self }} page, served from twig. {{ 'now'|date }}.
     </p>
