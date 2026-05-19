@@ -1,6 +1,6 @@
 {
   "name": "@survos/fw",
-  "description": "integrate onsonui and other libraries with Symfony",
+  "description": "integrate Framework7 and related mobile libraries with Symfony",
   "license": "MIT",
   "version": "1.0.5",
   "symfony": {
@@ -10,11 +10,17 @@
         "webpackMode": "eager",
         "fetch": "lazy",
         "enabled": true,
-        "autoimport": {}
+        "autoimport": {
+          "framework7/css/bundle": true
+        }
       }
     },
     "importmap": {
-      "@survos-mobile/mobile": "path:%PACKAGE%/src/controllers/mobile_controller.js"
+      "@survos-mobile/mobile": "path:%PACKAGE%/src/controllers/mobile_controller.js",
+      "debug": "^4.4.3",
+      "framework7": "^9.0.4",
+      "framework7/bundle": "^9.0.4",
+      "framework7/css/bundle": "^9.0.4"
     }
   },
   "peerDependencies": {
@@ -23,5 +29,8 @@
   "devDependencies": {
     "@hotwired/stimulus": "^3.2.2"
   },
-  "dependencies": {}
+  "dependencies": {
+    "debug": "^4.4.3",
+    "framework7": "^9.0.4"
+  }
 }

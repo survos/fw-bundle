@@ -1,35 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Survos\FwBundle;
 
-use Survos\CoreBundle\Bundle\AssetMapperBundle;
 use Survos\FwBundle\Command\CompileRoutesCommand;
 use Survos\FwBundle\Components\FwPage;
-use Survos\FwBundle\Event\KnpMenuEvent;
 use Survos\FwBundle\Components\MenuComponent;
+use Survos\FwBundle\Event\KnpMenuEvent;
 use Survos\FwBundle\Menu\MenuService;
 use Survos\FwBundle\Service\FwService;
 use Survos\FwBundle\Twig\TwigExtension;
+use Survos\Kit\AbstractUxBundle;
+use Survos\Kit\SurvosKitBundle;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Configurator\DefinitionConfigurator;
-use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\Kernel\RequiredBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
-class SurvosFwBundle extends AssetMapperBundle implements CompilerPassInterface
+
+#[RequiredBundle(SurvosKitBundle::class)]
+class SurvosFwBundle extends AbstractUxBundle
 {
     public const ASSET_PACKAGE = 'fw';
 
-    public function build(ContainerBuilder $container): void
-    {
-        parent::build($container);
-        $container->addCompilerPass($this);
-    }
-
-
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
+        parent::loadExtension($config, $container, $builder);
+
         foreach ([MenuService::class] as $className) {
             $builder->register($className)
                 ->setPublic(true)
