@@ -6,7 +6,7 @@ namespace Survos\FwBundle\Menu;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
 use Survos\FwBundle\Event\KnpMenuEvent;
-use Survos\CoreBundle\Entity\RouteParametersInterface;
+use Survos\FieldBundle\Entity\RouteParametersInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

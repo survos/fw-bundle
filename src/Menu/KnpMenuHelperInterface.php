@@ -5,7 +5,7 @@ namespace Survos\FwBundle\Menu;
 
 use Knp\Menu\ItemInterface;
 use Survos\FwBundle\Event\KnpMenuEvent;
-use Survos\CoreBundle\Entity\RouteParametersInterface;
+use Survos\FieldBundle\Entity\RouteParametersInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
