@@ -6,7 +6,6 @@
     ],
     "license": "MIT",
     "type": "symfony-bundle",
-    "minimum-stability": "beta",
     "prefer-stable": true,
     "require": {
         "php": "^8.4",
@@ -14,7 +13,7 @@
         "symfony/dependency-injection": "^8.1",
         "symfony/http-kernel": "^8.1",
         "twig/twig": "^3.4",
-        "survos/kit-bundle": "^2.0",
+        "survos/kit-bundle": "^2.5",
         "knplabs/knp-menu-bundle": "^3.2",
         "symfony/event-dispatcher": "^8.1",
         "symfony/ux-twig-component": "^3.0",
@@ -29,7 +28,7 @@
         "symfony/twig-bundle": "^8.1",
         "symfony/var-dumper": "^8.1",
         "symfony/security-bundle": "^8.1",
-        "survos/auth-bundle": "^2.0"
+        "survos/auth-bundle": "^2.5"
     },
     "autoload": {
         "psr-4": {
