@@ -18,9 +18,9 @@
     "importmap": {
       "@survos-mobile/mobile": "path:%PACKAGE%/src/controllers/mobile_controller.js",
       "debug": "^4.4.3",
-      "framework7": "^9.0.4",
-      "framework7/bundle": "^9.0.4",
-      "framework7/css/bundle": "^9.0.4"
+      "framework7": "^9.1.1",
+      "framework7/bundle": "^9.1.1",
+      "framework7/css/bundle": "^9.1.1"
     }
   },
   "peerDependencies": {
@@ -31,6 +31,6 @@
   },
   "dependencies": {
     "debug": "^4.4.3",
-    "framework7": "^9.0.4"
+    "framework7": "^9.1.1"
   }
 }
