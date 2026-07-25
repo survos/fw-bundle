@@ -14,7 +14,9 @@
 
     {% block javascripts %}
         {# perhaps the entry point should be configurable, since it might be mobile_app.  Also, configure if pwa is called #}
-        {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {# Namespaced to avoid colliding with an app's own {% block importmap %} override,
+           which would otherwise render importmap() twice via parent() + re-declaration. #}
+        {% block fw_importmap %}{{ importmap('app') }}{% endblock %}
     {% endblock %}
 
     {% block pwa %}

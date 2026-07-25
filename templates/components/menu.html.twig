@@ -14,6 +14,17 @@
             },
 
         }) }}
+    {% elseif type in [MOBILE_TAB_MENU_LINKED] %}
+        {{ knp_menu_render(menuItem, {
+            "template"      : "@SurvosFw/menu/tab_menu_linked.html.twig",
+            "debug": debug|default(false),
+            "allow_safe_labels": true,
+            rootAttributes: {
+                class: 'menu-inner py-1',
+                role: 'menu'
+            },
+
+        }) }}
     {% elseif type in [MOBILE_PAGE_MENU] %}
         {{ knp_menu_render(menuItem, {
             "template"      : "@SurvosFw/menu/page_menu.html.twig",

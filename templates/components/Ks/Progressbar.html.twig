@@ -1,0 +1,9 @@
+{#
+    Anonymous component: <twig:SurvosFw:Ks:Progressbar progress="50" /> or <twig:SurvosFw:Ks:Progressbar infinite="true" multi="true" />
+#}
+{% props progress = null, infinite = false, multi = false, color = null %}
+{% if infinite %}
+    <span class="progressbar-infinite{{ multi ? ' color-multi' : '' }}{{ color ? ' color-' ~ color : '' }}"></span>
+{% else %}
+    <span data-progress="{{ progress }}" class="progressbar{{ color ? ' color-' ~ color : '' }}"></span>
+{% endif %}

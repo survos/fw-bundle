@@ -1,0 +1,19 @@
+{#
+    Anonymous component: <twig:SurvosFw:Ks:Radio name="demo" :items="[{label:'Books', value:'Books', checked:true}]" />
+#}
+{% props name, items = [], iconStart = true %}
+<div class="list list-strong inset list-dividers-ios">
+    <ul>
+        {% for item in items %}
+            <li>
+                <label class="item-radio item-radio-icon-{{ iconStart ? 'start' : 'end' }} item-content">
+                    <input type="radio" name="{{ name }}" value="{{ item.value }}" {{ item.checked|default(false) ? 'checked' : '' }} />
+                    <i class="icon icon-radio"></i>
+                    <div class="item-inner">
+                        <div class="item-title">{{ item.label }}</div>
+                    </div>
+                </label>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

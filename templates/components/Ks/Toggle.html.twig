@@ -1,0 +1,23 @@
+{#
+    Anonymous component: <twig:SurvosFw:Ks:Toggle :items="[{label:'Batman', checked:true, color:'blue'}]" />
+#}
+{% props items = [] %}
+<div class="list list-strong inset list-dividers-ios">
+    <ul>
+        {% for item in items %}
+            <li>
+                <label class="item-content">
+                    <div class="item-inner">
+                        <div class="item-title">{{ item.label }}</div>
+                        <div class="item-after">
+                            <div class="toggle toggle-init{{ item.color is defined ? ' color-' ~ item.color : '' }}{{ item.disabled|default(false) ? ' disabled' : '' }}">
+                                <input type="checkbox" {{ item.checked|default(false) ? 'checked' : '' }} />
+                                <span class="toggle-icon"></span>
+                            </div>
+                        </div>
+                    </div>
+                </label>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

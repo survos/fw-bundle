@@ -1,0 +1,16 @@
+{#
+    Anonymous component: <twig:SurvosFw:Ks:Input label="Name" type="text" placeholder="Your name" />
+#}
+{% props label, type = 'text', placeholder = '', icon = null %}
+<li class="item-content item-input">
+    {% if icon %}
+        <div class="item-media"><twig:ux:icon name="{{ icon }}" /></div>
+    {% endif %}
+    <div class="item-inner">
+        <div class="item-title item-label">{{ label }}</div>
+        <div class="item-input-wrap">
+            <input type="{{ type }}" placeholder="{{ placeholder }}" />
+            <span class="input-clear-button"></span>
+        </div>
+    </div>
+</li>

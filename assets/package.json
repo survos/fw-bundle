@@ -13,6 +13,12 @@
         "autoimport": {
           "framework7/css/bundle": true
         }
+      },
+      "ks_autocomplete": {
+        "main": "src/controllers/ks_autocomplete_controller.js",
+        "webpackMode": "eager",
+        "fetch": "lazy",
+        "enabled": true
       }
     },
     "importmap": {

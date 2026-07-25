@@ -1,0 +1,5 @@
+{#
+    Anonymous component: <twig:SurvosFw:Ks:Badge value="5" color="red" />
+#}
+{% props value, color = null %}
+<span class="badge{{ color ? ' color-' ~ color : '' }}">{{ value }}</span>

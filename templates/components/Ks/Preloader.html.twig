@@ -1,0 +1,5 @@
+{#
+    Anonymous component: <twig:SurvosFw:Ks:Preloader large="true" color="red" />
+#}
+{% props large = false, color = null, multi = false %}
+<div class="preloader{{ large ? ' preloader-large' : '' }}{{ color ? ' text-color-' ~ color : '' }}{{ multi ? ' color-multi' : '' }}"></div>

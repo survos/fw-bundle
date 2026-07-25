@@ -1,0 +1,23 @@
+{#
+    Anonymous component -- static-HTML action sheet, opened declaratively via
+    the actions-open/data-actions convention (same idea as popup/panel, no
+    custom JS).
+
+    <twig:SurvosFw:Ks:ActionSheet id="demo-actions" triggerLabel="Open" :buttons="[
+        {label: true, text: 'Choose an option'},
+        {text: 'Button 1'},
+        {text: 'Button 2'},
+        {text: 'Cancel', color: 'red'},
+    ]" />
+#}
+{% props id, triggerLabel, buttons = [] %}
+<p><a class="button button-fill button-round actions-open" data-actions=".{{ id }}">{{ triggerLabel }}</a></p>
+<div class="actions-modal {{ id }}">
+    <div class="actions-group">
+        {% for button in buttons %}
+            <div class="actions-button{{ button.label|default(false) ? ' actions-label' : '' }}{{ button.color is defined ? ' color-' ~ button.color : '' }}{{ button.bold|default(false) ? ' actions-button-bold' : '' }}">
+                {{ button.text }}
+            </div>
+        {% endfor %}
+    </div>
+</div>

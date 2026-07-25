@@ -1,0 +1,29 @@
+{#
+    Anonymous component -- renders both the trigger button and the popup itself.
+    F7 core handles opening/closing declaratively via the popup-open/popup-close
+    classes + data-popup selector, no custom JS needed.
+
+    <twig:SurvosFw:Ks:Popup id="demo-popup" triggerLabel="Open Popup" title="Popup Title">
+        <p>Any HTML content here.</p>
+    </twig:SurvosFw:Ks:Popup>
+#}
+{% props id, triggerLabel, title = 'Popup' %}
+<p>
+    <a class="button button-fill button-round popup-open" data-popup=".{{ id }}">{{ triggerLabel }}</a>
+</p>
+<div class="popup {{ id }}">
+    <div class="page">
+        <div class="navbar">
+            <div class="navbar-bg"></div>
+            <div class="navbar-inner">
+                <div class="title">{{ title }}</div>
+                <div class="right"><a class="link popup-close"><twig:ux:icon name="tabler:x" /></a></div>
+            </div>
+        </div>
+        <div class="page-content">
+            <div class="block">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+</div>

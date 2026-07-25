@@ -1,0 +1,9 @@
+{#
+    Anonymous component: <twig:SurvosFw:Ks:Grid cols="3" :items="['A', 'B', 'C']" />
+#}
+{% props cols = 2, gap = true, items = [] %}
+<div class="grid grid-cols-{{ cols }}{{ gap ? ' grid-gap' : '' }}">
+    {% for item in items %}
+        <div>{{ item }}</div>
+    {% endfor %}
+</div>

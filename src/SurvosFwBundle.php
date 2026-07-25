@@ -7,6 +7,7 @@ namespace Survos\FwBundle;
 use Survos\FwBundle\Command\CompileRoutesCommand;
 use Survos\FwBundle\Components\FwPage;
 use Survos\FwBundle\Components\MenuComponent;
+use Survos\FwBundle\Components\Ks\Autocomplete;
 use Survos\FwBundle\Event\KnpMenuEvent;
 use Survos\FwBundle\Menu\MenuService;
 use Survos\FwBundle\Service\FwService;
@@ -54,6 +55,9 @@ class SurvosFwBundle extends AbstractUxBundle
         ;
 
         $builder->register(FwPage::class)
+            ->setAutowired(true)->setAutoconfigured(true)->setPublic(true);
+
+        $builder->register(Autocomplete::class)
             ->setAutowired(true)->setAutoconfigured(true)->setPublic(true);
 
         $builder->register(MenuComponent::class)->setAutowired(true)->setAutoconfigured(true)

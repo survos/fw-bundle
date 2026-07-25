@@ -14,6 +14,11 @@ class KnpMenuEvent extends Event
     public const MOBILE_PAGE_MENU = 'MOBILE_PAGE_MENU';
     public const MOBILE_TAB_MENU = 'MOBILE_TAB_MENU';
     public const MOBILE_UNLINKED_MENU = 'MOBILE_UNLINKED_MENU';
+    // Like MOBILE_TAB_MENU, but each tab is a real route/href (full page load)
+    // instead of a #tab-{name} anchor into a pre-rendered client-side tab set.
+    // For apps where every "tab" is its own Symfony route (see fw-bundle README,
+    // "Adding fw7 to an existing PWA" section).
+    public const MOBILE_TAB_MENU_LINKED = 'MOBILE_TAB_MENU_LINKED';
 
     public function __construct(
         protected ItemInterface $menu,

@@ -1,0 +1,10 @@
+{#
+    Anonymous component: <twig:SurvosFw:Ks:Chip label="..." color="red" icon="tabler:map-pin" />
+#}
+{% props label, color = null, icon = null, outline = false %}
+<div class="chip{{ outline ? ' chip-outline' : '' }}{{ color ? ' color-' ~ color : '' }}">
+    {% if icon %}
+        <div class="chip-media"><twig:ux:icon name="{{ icon }}" /></div>
+    {% endif %}
+    <div class="chip-label">{{ label }}</div>
+</div>

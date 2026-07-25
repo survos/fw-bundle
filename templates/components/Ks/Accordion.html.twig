@@ -1,0 +1,22 @@
+{#
+    Anonymous component: <twig:SurvosFw:Ks:Accordion :items="[{title: '...', content: '...'}]" />
+#}
+{% props items = [], opposite = false %}
+<div class="list list-strong inset list-dividers-ios accordion-list{{ opposite ? ' accordion-opposite' : '' }}">
+    <ul>
+        {% for item in items %}
+            <li class="accordion-item">
+                <a class="item-link item-content">
+                    <div class="item-inner">
+                        <div class="item-title">{{ item.title }}</div>
+                    </div>
+                </a>
+                <div class="accordion-item-content">
+                    <div class="block">
+                        <p>{{ item.content|raw }}</p>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+</div>

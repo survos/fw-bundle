@@ -1,0 +1,18 @@
+{#
+    <twig:SurvosFw:Ks:Autocomplete label="Language" sourceRoute="ks_api_languages" />
+#}
+<div class="list list-strong-ios list-outline-ios">
+    <ul>
+        <li class="item-content item-input">
+            <div class="item-inner">
+                <div class="item-title item-label">{{ label }}</div>
+                <div class="item-input-wrap" {{ stimulus_controller('survos--fw-bundle--ks-autocomplete', {
+                    sourceUrl: sourceUrl,
+                    inputId: inputId,
+                }) }}>
+                    <input type="text" placeholder="{{ placeholder }}" id="{{ inputId }}" />
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,22 @@
+{% extends '@KnpMenu/menu.html.twig' %}
+{% set debug = options['debug']|default(false) %}
+{% block root %}
+    {{ block('list') -}}
+{% endblock %}
+
+{% block item %}
+    {% set icon = item.attributes.icon|default('fa-question-mark') %}
+    {% set domain = item.extras.translation_domain|default(false) %}
+    {% set label = domain ? item.label|trans({}, domain) : item.label %}
+
+    <a href="{{ item.uri }}" class="tab-link {{ matcher.isCurrent(item) ? 'tab-link-active' }}">
+        <twig:ux:icon name="{{ icon }}" />
+        <span class="tabbar-label">{{ label }}</span>
+    </a>
+{% endblock %}
+
+{% block list %}
+    {% if item.hasChildren and options.depth is not same as(0) and item.displayChildren %}
+        {{ block('children') }}
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{#
+    Anonymous component: <twig:SurvosFw:Ks:List :items="[...]" />
+    items: array<string|array{title:string, after?:string, icon?:string}>
+#}
+{% props items = [], strong = true, outline = true, dividers = true, inset = false %}
+<div class="list{{ strong ? ' list-strong' : '' }}{{ outline ? ' list-outline-ios' : '' }}{{ dividers ? ' list-dividers-ios' : '' }}{{ inset ? ' inset' : '' }}">
+    <ul>
+        {% for item in items %}
+            {% if item is iterable %}
+                <li>
+                    <div class="item-content">
+                        {% if item.icon is defined %}
+                            <div class="item-media"><twig:ux:icon name="{{ item.icon }}" /></div>
+                        {% endif %}
+                        <div class="item-inner">
+                            <div class="item-title">{{ item.title }}</div>
+                            {% if item.after is defined %}<div class="item-after">{{ item.after }}</div>{% endif %}
+                        </div>
+                    </div>
+                </li>
+            {% else %}
+                <li>{{ item }}</li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>

@@ -1,0 +1,21 @@
+{#
+    Anonymous component -- a self-contained "cover" panel. F7 core handles
+    open/close declaratively (panel-open/panel-close classes + panel-init
+    auto-registration), no custom JS needed.
+
+    <twig:SurvosFw:Ks:Panel id="demo-panel" triggerLabel="Open panel">
+        <p>Panel content.</p>
+    </twig:SurvosFw:Ks:Panel>
+#}
+{% props id, triggerLabel, side = 'left' %}
+<div class="panel panel-{{ side }} panel-cover panel-init {{ id }}">
+    <div class="page">
+        <div class="page-content">
+            <div class="block block-strong-ios block-outline-ios">
+                {% block content %}{% endblock %}
+                <p><a class="panel-close">Close me</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+<p><a class="button button-round button-fill panel-open" data-panel=".{{ id }}">{{ triggerLabel }}</a></p>

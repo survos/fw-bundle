@@ -1,0 +1,10 @@
+{#
+    Anonymous component: <twig:SurvosFw:Ks:Segmented raised="true" round="true" :items="[{label:'A'},{label:'B',active:true}]" />
+#}
+{% props items = [], strong = false, raised = false, round = false, outline = false %}
+<p class="segmented{{ strong ? ' segmented-strong' : '' }}{{ raised ? ' segmented-raised' : '' }}{{ round ? ' segmented-round' : '' }}">
+    {% for item in items %}
+        <button class="button{{ round ? ' button-round' : '' }}{{ outline ? ' button-outline' : '' }}{{ item.active|default(false) ? ' button-active' : '' }}">{{ item.label }}</button>
+    {% endfor %}
+    {% if strong %}<span class="segmented-highlight"></span>{% endif %}
+</p>
