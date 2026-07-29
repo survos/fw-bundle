@@ -124,72 +124,99 @@ in `body`/`navbar_title` — no Dexie stores, no client-side routing, no
 the work; Framework7 is purely CSS + the tabbar/navbar/card/list/button
 markup conventions.
 
-## Notes
+## Multi-project apps: Dexie-synced, no full page loads
 
-These need to be cleaned up, but they're useful to me during development.
+This is the pattern that actually delivers "installable app, not a website" — every tab switch
+and every detail-page navigation happens client-side, with zero server round-trip after the
+initial page load. It's real and working today in
+[survos-sites/framework7-bundle-demo](https://github.com/survos-sites/framework7-bundle-demo)
+(`chijal`/`modo`/`cmas` projects) — that repo is the canonical reference implementation; this
+section is the map of how its pieces fit together, since previously the only trace of it here was
+a partial, admittedly-unfinished note. If you're building a new multi-tenant app on this bundle,
+copy from that demo, not from scratch.
 
-### Twig
+### The pieces, end to end
 
-The application can be run as an SPA.  The initial page must extend the base page
+1. **`config/packages/survos_fw.yaml`** — one `projects:` entry per tenant. Each project is a
+   `code`, `logo`, `name`, an ordered `tabs` list (each tab name maps to a
+   `templates/tabs/<name>.html.twig` include), a Dexie `database` name, and `stores` (the
+   `{name, schema, url}` triplets Dexie syncs — `schema` is a Dexie index spec, `url` is the
+   fetch source; `url: null` for a store that's purely local/client-written, e.g. a
+   `checkins`/`claps` table nothing ever fetches):
 
-    {% extends "@SurvosFw/base.html.twig" %}
+   ```yaml
+   survos_fw:
+     projects:
+       chijal:
+         code: chijal
+         logo: /logos/chijal-logo.jpg
+         name: Chijal
+         tabs: [locations, map, artists, obras, info]
+         database: chijal
+         stores:
+           - { name: artists, schema: code, url: https://chijal.org/api/artists }
+           - { name: locations, schema: code, url: https://chijal.org/api/locations }
+           - { name: checkins, schema: "locationCode,timestamp", url: null }
+   ```
 
-create app_controller and extend it from 
+2. **`@SurvosFw/start.html.twig`** (this bundle's own template — extend or override, don't
+   copy) renders **every tab's content into the DOM in one page load**:
 
+   ```twig
+   <div class="tabs">
+       {% for t in config.tabs %}
+           <div id="tab-{{ t }}" class="page-content tab">
+               {{ include('tabs/%s.html.twig'|format(t), {t: t}) }}
+           </div>
+       {% endfor %}
+   </div>
+   ```
 
-This is one way of loading a page, but possibly only relevant with OnsenUI
+   Switching tabs is Framework7's own native tab mechanism — no navigation, no fetch. F7 fires
+   `tabShow`/`tabHide`; the app controller (below) turns `tabShow` into a plain DOM
+   `CustomEvent('tab-{id}-show')`.
 
-      {{ stimulus_action(_app_sc, 'loadPage', 'click', {
-          route: 'whatever'
-      }) }}
+3. **Each `tabs/<name>.html.twig`** wraps its content in `<twig:dexie>`, keyed to that same
+   event, so the tab (re-)renders from whatever's already in IndexedDB every time it's shown —
+   not on a timer, not on page load, on the F7 event:
 
-_app_sc should be set to 'app', someday this may change (https://github.com/hotwired/stimulus/issues/641)
+   ```twig
+   <twig:dexie refreshEvent="tab-{{ t }}-show" :store="t" :globals="{}" :filter="{}" :caller="_self">
+       <twig:block name="twig_template">
+           {% for row in rows %}
+               <a href="/pages/artist/{{ row.code }}" class="item-link">{{ row.name }}</a>
+           {% endfor %}
+       </twig:block>
+   </twig:dexie>
+   ```
 
-### Tabs and Pages
+   `rows` there comes from `window.db.table(t).toArray()`, filtered by `:filter` if given — see
+   `assets/src/controllers/dexie_controller.js` in `survos/js-twig-bundle`.
 
-Two fundamental concepts: the tabs at the bottom of the screen, and everything else.
+4. **Detail pages** (`/pages/artist/{code}`) are plain `<a href>` links, but they resolve through
+   **Framework7's own client-side router** (`routes.js`, `app.views.main.router`), not the
+   browser — so this layer of navigation is app-like too, not just tab-switching. This is the
+   part easiest to miss: there's nothing conspicuously "SPA" about the markup, it's just an
+   `<a href>`, and the app-like behavior is entirely down to F7 owning routing for anything under
+   its view root.
 
-All pages, though, are pre-loaded as twig templates in (MobileController?)
+5. **The app Stimulus controller** (`_app_sc`, conventionally named `app` — see the Twig note
+   above) does three things on `initialize()`: constructs `new Framework7({...el: '#app',
+   routes...})`, listens for the `dbready` event dispatched once Dexie has finished its initial
+   sync (see `survos/js-twig-bundle`'s `DbUtilities`) to settle the initial tab/route from the
+   URL hash, and constructs `new DbUtilities(config.projects[configCode], locale)` inside F7's
+   own `init:` callback — this is what actually triggers the Dexie sync for this project's
+   configured `stores`. Copy `framework7-bundle-demo/assets/controllers/app_controller.js`
+   wholesale as your starting point; it's short and every piece in it is load-bearing.
 
-To create the tabs, the following, where id is the name of the tab template
+### Known limitation — projects are static config today
 
-```php
-#[AsEventListener(event: KnpMenuEvent::MOBILE_TAB_MENU)]
-public function tabMenu(KnpMenuEvent $event): void
-{
-    $menu = $event->getMenu();
-        $this->add($menu, id: 'projects', label: 'projects', icon: 'fa-list');
-        $this->add($menu, id: 'tours', label: 'tours', icon: 'fa-list', badge: 'x');
-        $this->add($menu, id: 'share', label: 'share', icon: 'fa-qrcode');
-
-```
-
-## Events
-
-Old way:
-When a tab is clicked, a 'prechange' event is dispatched, with  event.tabItem as the tab that's about to become active.  We intercept  
-
-### Dynamic Data
-
-To load dynamic data into a page, you must first put the data into dixie.  The basic way is to set up "stores" and define the indexable fields, eg..
-
-```yaml
-survos_js_twig:
-  debug: true
-  db: omar-db
-  version: 7
-  stores:
-    -
-      name: items
-      schema: "++id,code,title,projectCode"
-      url: /api/items
-    -
-      name: projects
-      schema: "code"
-      url: /api/projects
-```
-
-
+Adding a new project means adding a YAML entry and redeploying. That's an accepted stopgap for
+getting navigation and dynamic rendering working, not the intended end state — a project is just
+a name, a logo, and a handful of endpoints, and that's a natural fit for a small admin-managed
+registry (a database table + a simple CRUD UI) instead of static YAML requiring a rebuild per
+addition. Not built yet; flagging it here so the next person who reaches for `survos_fw.yaml`
+doesn't assume static config is the permanent design.
 
 ## Requirement
 
