@@ -16,8 +16,9 @@ The main integration points are:
 
 - `src/SurvosFwBundle.php`: bundle configuration, service wiring, compiler pass, and AssetMapper registration.
 - `assets/package.json`: Stimulus and importmap metadata.
-- `assets/src/controllers/mobile_controller.js`: mobile/Framework7 Stimulus controller.
+- `assets/src/controllers/mobile_controller.js`: mobile/Framework7 Stimulus controller, base class for the demo's `app_controller.js` (imported as `@survos-mobile/mobile`). Real F7 v9 event names only as of 2026-07-29 — see `docs/events.md` before adding any new listener here.
 - `templates/fw-base.html.twig`, `templates/start.html.twig`, and `templates/components/`: Framework7-facing Twig UI.
+- `docs/events.md`: how Framework7 v9's page/tab lifecycle events actually work (DOM events vs. F7's internal pub/sub, verified against the real compiled source, not just docs) — required reading before touching event wiring in this bundle or an app built on it.
 
 ## Commands
 

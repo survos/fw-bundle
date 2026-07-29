@@ -8,6 +8,10 @@ A collection of tools to help create Symfony-based mobile apps.
 
 Work in Progress.  See https://github.com/survos-sites/framework7-bundle-demo to see this in action.
 
+See `docs/events.md` for how Framework7 v9's page/tab lifecycle events actually work (DOM events
+vs. F7's own internal pub/sub, and the real gotcha: they only fire when F7's router is driving the
+navigation) — read that before wiring up any new event listener in an app built on this bundle.
+
 ## Adding fw7 to an existing PWA (simple, no Dexie)
 
 Everything below the "Notes" heading documents the full Dexie-synced,
@@ -124,6 +128,13 @@ in `body`/`navbar_title` — no Dexie stores, no client-side routing, no
 the work; Framework7 is purely CSS + the tabbar/navbar/card/list/button
 markup conventions.
 
+Because `clicks.externalLinks: 'a'` routes every link through a real
+browser navigation instead of F7's own router, F7's page lifecycle events
+(`page:init`/`pageInit` and friends — see `docs/events.md`) never fire in
+this mode. That's expected, not a bug: there's no F7-managed page
+transition for them to fire *for*. Do data-loading in a normal Stimulus
+`connect()`/`initialize()` here, not an F7 event listener.
+
 ## Multi-project apps: Dexie-synced, no full page loads
 
 This is the pattern that actually delivers "installable app, not a website" — every tab switch
@@ -174,7 +185,11 @@ copy from that demo, not from scratch.
 
    Switching tabs is Framework7's own native tab mechanism — no navigation, no fetch. F7 fires
    `tabShow`/`tabHide`; the app controller (below) turns `tabShow` into a plain DOM
-   `CustomEvent('tab-{id}-show')`.
+   `CustomEvent('tab-{id}-show')`. This re-dispatch is legitimate, not a workaround: F7's real
+   `tab:show` DOM event already exists and fires fine on its own (see `docs/events.md`), but it's
+   generic — the same name for every tab. Constructing a per-tab-id event name here is genuinely
+   new information F7 doesn't provide, needed so each tab's own `<twig:dexie refreshEvent="tab-
+   {{t}}-show">` only re-renders itself, not every tab at once.
 
 3. **Each `tabs/<name>.html.twig`** wraps its content in `<twig:dexie>`, keyed to that same
    event, so the tab (re-)renders from whatever's already in IndexedDB every time it's shown —

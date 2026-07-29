@@ -12,7 +12,21 @@ const debug = {
 };
 
 /*
-This class has not been updated for Framework 7, it is for OnsenUI but we may want something like this.
+Updated for real Framework7 v9 event names (2026-07-29) -- see ../../../docs/events.md for the
+full writeup of how this was verified (traced the actual dispatch code in framework7@9.1.1's
+pageCallback() and dom7@4.0.6's trigger(), then confirmed live against fw-bundle-demo). Summary:
+`page:init` (colon-lowercase) IS a real, native, bubbling DOM CustomEvent -- catchable via plain
+document.addEventListener(), no Dom7 wrapper required. `pageInit` (camelCase) is F7's SEPARATE
+internal Eventable pub/sub (app.on(...)/router.on(...)), not a DOM event at all. Both fire
+together from the same call, for every real page lifecycle step -- but ONLY when F7's own
+router/view is actually driving the navigation (confirmed via fw-bundle-demo's start.html.twig
+`.view-main.view-init` structure + app_controller.js's `new Framework7({ el:'#app', ... })`).
+
+This file previously mixed pure OnsenUI event names (prepush/prepop/postpush/postpop,
+ons-tabbar:init) -- which have no Framework7 equivalent at all and never fired -- with bare,
+un-prefixed names ('init'/'show'/'destroy' instead of 'page:init' etc.) that also never fired
+against real F7 dispatch. Both classes of dead listener are removed below; only verified F7 event
+names remain.
 
 * The following line makes this controller "lazy": it won't be downloaded until needed
 * See https://github.com/symfony/stimulus-bridge#lazy-controllers
@@ -27,76 +41,11 @@ export default class extends Controller {
         'tabbar',
         'tab',
         'twigTemplate',
-        'message',
-        'menu',
-        'navigator']
-
-    // ...
-
-    eventPreDebug(e) {
-        debug.lifecycle('🔄 Pre-event: %s for page %s', e.type, e.currentPage?.getAttribute('id'));
-        debug.lifecycle('Event detail: %o', e.detail);
-        debug.lifecycle('Current page: %o', e.currentPage);
-
-        let navigator = e.navigator;
-        console.warn(e.type, e.currentPage.getAttribute('id'), e.detail, e.currentPage, e);
-    }
-
-    eventPostDispatch(e) {
-        debug.lifecycle('✅ Post-event: %s', e.type);
-
-        // idea: dispatch a "{page}:{eventName}" and let the stimulus controller listen for it.
-        // let navigator = e.navigator;
-        let enterPageName = e.enterPage.getAttribute('id');
-        let leavePageName = '~';
-        if (e.leavePage) {
-            leavePageName = e.leavePage.getAttribute('id');
-            let eventType = leavePageName + '.' + e.type;
-            debug.events('📤 Dispatching leave event: %s', eventType);
-            console.log('dispatching ' + eventType);
-            document.dispatchEvent(new Event(eventType));
-        }
-
-        // this.dispatch("saved", { detail: { content:
-        //         'saved content' } })
-
-        console.info("%s %s => %s", e.type, leavePageName, enterPageName);
-        let eventType = enterPageName + '.' + e.type;
-        debug.events('📤 Dispatching enter event: %s', eventType);
-        console.log('dispatching ' + eventType);
-        if (e.type === 'postpush') {
-            debug.events('📋 Event data: %o', e.enterPage.data);
-            document.dispatchEvent(new CustomEvent(eventType, {detail: e.enterPage.data}));
-        }
-    }
+        'message']
 
     initialize() {
         debug.main('🔧 Initializing mobile controller');
         super.initialize();
-
-        document.addEventListener('ons-tabbar:init', function (event) {
-            var tabBar = event.component;
-            debug.tabs('📊 Tabbar initialized: %o', tabBar);
-            console.error(tabBar);
-            // tabBar.setActiveTab(someIndex);
-        });
-
-        // page events
-        ['init', 'show', 'destroy'].forEach(
-            (eventName) => {
-                debug.lifecycle('🎧 Setting up listener for: %s', eventName);
-                console.warn(`Listening for ${eventName}`);
-                document.addEventListener(eventName, function (event) {
-                    debug.lifecycle('📄 Page %s received %s event', event.target.id, eventName);
-                    console.assert(event.target.id, "Missing id in page");
-                    // when we get an event that matches the page, dispatch it so that dexie can get it
-                    console.warn(`!page ${event.target.id}.${event.type}`, event.target);
-                    // if (event.target.matches('#page1')) {
-                    //     ons.notification.alert('Page 1 is initiated.');
-                    // }
-                }, false);
-            }
-        );
     }
 
     connect() {
@@ -107,25 +56,19 @@ export default class extends Controller {
         //     // console.warn("ons is ready, " + this.identifier)
         // });
 
-        // https://framework7.io/docs/page#page-events
-        ['init', 'show', 'hide', 'precache',"page:afterin"].forEach(eventName =>
+        // Real, verified Framework7 v9 DOM event names only (see docs/events.md) -- these are
+        // genuine native CustomEvents (dom7's trigger() -> real dispatchEvent()), catchable via
+        // plain document.addEventListener() with no wrapper needed. They only fire when F7's own
+        // router/view is driving the navigation (see events.md's "the actual gotcha" section) --
+        // if this listener never logs anything in an app, check that first, not the event names.
+        ['page:init', 'page:beforein', 'page:afterin'].forEach(eventName =>
             document.addEventListener(eventName, (e) => {
                 debug.lifecycle('📱 Framework7 event: %s for target: %s', e.type, e.target?.getAttribute('id'));
 
-                // console.error('%s:%s / %o', e.type, e.target.getAttribute('id'), e.target);
-                // console.info('%s received for %s %o', e.type, e.target.getAttribute('id'), e.target);
-                let tabItem = e.detail.tabItem;
-                if (tabItem) {
-                    let tabPageName = tabItem.getAttribute('page');
-                    let eventType = tabPageName + '.' + e.type;
-                    debug.tabs('📊 Tab event: %s', eventType);
-                    debug.tabs('Tab item: %o', e.detail.tabItem);
-                    console.log('dispatching ' + eventType);
-                    console.log(e.detail.tabItem);
-                    document.dispatchEvent(new CustomEvent(eventType, {'detail': e}));
-                }
-
-                //catch page after in
+                // Verified working (this exact code is live in fw-bundle-demo today): F7 fires a
+                // real page:afterin DOM event with a page-data detail; when the route carries a
+                // :page param, re-dispatch a "<page>.refresh" event carrying that data, so a
+                // per-page Stimulus/dexie controller can react without its own F7 event wiring.
                 if (e.type === 'page:afterin') {
                     debug.navigation('🧭 Page after in event');
                     debug.navigation('Event detail: %o', e.detail);
@@ -153,48 +96,25 @@ export default class extends Controller {
             })
         );
 
-        // prechange happens on tabs only, e.tabItem is the tab that's clicked, before the transition
-        document.addEventListener('prechange', (e) => {
-            debug.tabs('🔄 Tab prechange event');
-            // console.log('target', target, e.target.dataset);
+        // Real F7 replacement for Onsen's tabbar "prechange" (this bundle previously listened
+        // for a bare 'prechange' event that doesn't exist in Framework7 at all): F7's actual
+        // equivalent is 'tab:show', a real DOM event fired on the tab's own content panel when it
+        // becomes visible (verified present + dispatched via a real .trigger() call in
+        // framework7@9.1.1's source -- see docs/events.md). Onsen's tabbar-item carried a
+        // `label` attribute to read the title from directly; F7 tab-links have no such
+        // attribute -- this bundle's own start.html.twig renders the visible label as text
+        // inside a child `.tabbar-label` span instead, so look it up there.
+        document.addEventListener('tab:show', (e) => {
+            const tabId = e.target.id; // e.g. "tab-locations"
+            debug.tabs('🔄 Tab shown: %s', tabId);
+            if (!tabId || !this.hasTitleTarget) return;
 
-            let tabItem = e.detail.tabItem;
-            if (tabItem) {
-                debug.tabs('📊 Switching to tab: %s', tabItem.getAttribute('page'));
-                // console.log('prechange', target, tabItem, pageName);
-
-                // this is the tabItem component, not an HTML element
-                let title = tabItem.getAttribute('label');
-                if (this.hasTitleTarget) {
-                    this.titleTarget.innerHTML = title;
-                    debug.tabs('📝 Updated title to: %s', title);
-                }
-                // 'page', though it's really a tab.
-                let tabPageName = tabItem.getAttribute('page');
-                let eventType = tabPageName + '.' + e.type;
-                debug.events('📤 Dispatching prechange event: %s', eventType);
-                console.warn(`dispatching %s`, eventType);
-                document.dispatchEvent(new CustomEvent(eventType, {'detail': e}));
+            const label = document.querySelector(`a.tab-link[href="#${tabId}"] .tabbar-label`);
+            if (label) {
+                this.titleTarget.innerHTML = label.textContent.trim();
+                debug.tabs('📝 Updated title to: %s', label.textContent.trim());
             }
         });
-    }
-
-    navigatorTargetConnected() {
-        debug.main('🧭 Navigator target connected');
-
-        // The page element throws init, show, hide and destroy events depending on its lifecycle
-        document.addEventListener('init', e => {
-                debug.lifecycle('🔧 Init event received: %o', e);
-                // console.error(e)
-            }
-        );
-
-        // these look like onsen events!
-        this.navigatorTarget.addEventListener('prepush', this.eventPreDebug);
-        this.navigatorTarget.addEventListener('prepop', this.eventPreDebug);
-        this.navigatorTarget.addEventListener('postpush', this.eventPostDispatch);
-        this.navigatorTarget.addEventListener('postpop', this.eventPostDispatch);
-        // https://thoughtbot.com/blog/taking-the-most-out-of-stimulus
     }
 
     tabbarTargetConnected(e) {
@@ -239,10 +159,13 @@ export default class extends Controller {
         // this.titleTarget.innerHTML = title;
     }
 
-    openMenu(e) {
-        debug.navigation('🍔 Opening menu');
-        this.menuTarget.open();
-    }
+    // this.menuTarget.open() was an OnsenUI ons-side-menu component method -- a plain DOM
+    // element (an F7 .panel) has no .open() method. F7's real panel API is app.panel.open(side)
+    // (or a click handler on an element with the panel-open class, which start.html.twig's own
+    // menu-trigger links already use directly -- see the panel-open/panel-close classes there).
+    // Left as a comment rather than a guessed implementation: which side ('left'/'right') this
+    // particular menuTarget maps to needs confirming against real markup, not assumed.
+    // openMenu(e) { window.app.panel.open('left'); }
 
     log(x) {
         debug.main('📝 Log: %o', x);
@@ -254,36 +177,23 @@ export default class extends Controller {
         // this.messageTarget.innerHTML = ''
     }
 
+    // Real F7 replacement for Onsen's navigator.bringPageTop()/pushPage() (this bundle's old
+    // navigatorTargetConnected()/loadPage()/pushPage() called those directly on a plain DOM
+    // element -- they're OnsenUI component methods, not real DOM APIs, so they always threw).
+    // F7's real navigation API is the router itself: window.app.views.main.router.navigate(url).
+    // Currently unwired (no template dispatches a "mobile#loadPage" action anywhere), so this is
+    // implemented-but-unverified against real params -- confirm the exact e.params shape against
+    // a real caller before relying on it.
     loadPage(e) {
-        debug.navigation('📄 Loading page: %s', e.params.route);
-        debug.navigation('Page params: %o', e.params);
-
-        this.menuTarget.close();
-        let page = e.params.route;
-        console.error('loading page ' + page, e.params);
-        if (page) {
-            this.navigatorTarget.bringPageTop(page, {
-                data: e.params.extras.rp,
-                animation: 'fade'
-            });
-            debug.navigation('✅ Page loaded: %s', page);
-            console.log('loading page ' + page);
-        } else {
-            debug.error('❌ Missing page in params: %o', e.params);
-            console.error('missing page ', e.params);
+        const route = e.params.route;
+        debug.navigation('📄 Navigating to: %s', route);
+        if (!route) {
+            debug.error('❌ Missing route in params: %o', e.params);
+            return;
         }
-    }
-
-    pushPage(e) {
-        debug.navigation('🔀 Pushing page: %s', e.params.page);
-        debug.navigation('Push params: %o', e.params);
-
-        console.error(e.params);
-        this.navigatorTarget.pushPage(e.params.page, {data: e.params})
-            .then(p => {
-                debug.navigation('✅ Page pushed successfully: %o', p);
-                console.log(p);
-            });
+        // F7 panel close is app.panel.close('left'|'right'), not an element method -- not wired
+        // here since which side this menu is needs confirming against real markup.
+        window.app.views.main.router.navigate(route, { props: e.params.extras?.rp });
     }
 
     getFilter() {
