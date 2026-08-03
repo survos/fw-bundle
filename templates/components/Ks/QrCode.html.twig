@@ -8,9 +8,14 @@
     (endroid/qr-code-bundle, a hard dependency of this bundle) renders the PNG via a real
     route on your own server, no third-party API call, no data ever leaves your app.
 #}
-{% props data, size = 150, caption = 'Scan to open on your phone', alt = null %}
+{% props data, size = 150, caption = 'Scan to open on your phone', alt = null, target = '_blank' %}
 <figure class="text-center">
-    <a href="{{ data }}">
+    {# target defaults to _blank: on desktop this is a "scan to open on your
+       phone" QR code, but it's also just a link -- clicking it shouldn't
+       navigate away from the page you're looking at (e.g. a marketing
+       homepage), and it's what lets you click-to-test the target app in a
+       second local tab instead of a real phone. #}
+    <a href="{{ data }}"{% if target %} target="{{ target }}" rel="noopener"{% endif %}>
         <img src="{{ qr_code_url(data) }}" alt="{{ alt ?? caption }}" style="max-width: {{ size }}px">
     </a>
     {% if caption %}
