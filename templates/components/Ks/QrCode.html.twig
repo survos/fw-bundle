@@ -1,0 +1,19 @@
+{#
+    Anonymous component: <twig:SurvosFw:Ks:QrCode data="https://example.com" />
+
+    A QR code linking to `data`, wrapped in an <a> so it's clickable too (not just
+    scannable) -- the "scan to open this on your phone" pattern used on pgsc's
+    landing.html.twig, rutado's home/index.html.twig, and dadjokes' home/index.html.twig,
+    now extracted here instead of hand-copied a fourth time. Self-hosted: qr_code_url()
+    (endroid/qr-code-bundle, a hard dependency of this bundle) renders the PNG via a real
+    route on your own server, no third-party API call, no data ever leaves your app.
+#}
+{% props data, size = 150, caption = 'Scan to open on your phone', alt = null %}
+<figure class="text-center">
+    <a href="{{ data }}">
+        <img src="{{ qr_code_url(data) }}" alt="{{ alt ?? caption }}" style="max-width: {{ size }}px">
+    </a>
+    {% if caption %}
+        <figcaption class="text-secondary small mt-1">{{ caption }}</figcaption>
+    {% endif %}
+</figure>

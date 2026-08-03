@@ -18,7 +18,8 @@
         "symfony/event-dispatcher": "^8.1",
         "symfony/ux-twig-component": "^3.0",
         "symfony/options-resolver": "^8.1",
-        "symfony/console": "^8.1"
+        "symfony/console": "^8.1",
+        "endroid/qr-code-bundle": "^7.0"
     },
     "require-dev": {
         "phpstan/phpstan": "^2.0",
