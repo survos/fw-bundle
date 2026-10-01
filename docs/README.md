@@ -29,7 +29,7 @@ bin/console make:controller AppController
 ## 4. Add Required Imports
 Add the following imports to your controller:
 ```php
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Knp\Menu\FactoryInterface;
 use Survos\FwBundle\Service\FwService;
 use Symfony\Component\HttpFoundation\Request;
