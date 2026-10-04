@@ -18,7 +18,6 @@ composer require symfony/ux-icons
 composer require twig/intl-extra
 composer require twig/markdown-extra
 composer require league/commonmark
-composer require friendsofsymfony/jsrouting-bundle
 ```
 
 ## 3. Create a Controller
@@ -44,7 +43,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 ## 6. Install Importmap Dependencies
 ```bash
 bin/console importmap:require stimulus-attributes
-bin/console importmap:require fos-routing
 bin/console importmap:require framework7/framework7-bundle
 bin/console importmap:require framework7/framework7-bundle.min.css
 bin/console importmap:require @survos-js-twig/database --path="./vendor/survos/js-twig-bundle/assets/src/lib/dexieDatabase.js"
@@ -111,3 +109,7 @@ Add the following to your `composer.json`:
    ```
 
 Follow these steps to complete the setup and start building your application.
+
+Browser `path()` uses `survos/js-twig-bundle` and cache-warmed route JSON.
+Do not add a routing importmap entry or a FOS dump command. See the
+[routing migration guide](../../js-twig-bundle/docs/routing-migration.md).

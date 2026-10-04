@@ -237,7 +237,9 @@ doesn't assume static config is the permanent design.
 
 ```bash
 bin/console importmap:require stimulus-attributes
-bin/console importmap:require fos-routing
-composer req friendsofsymfony/jsrouting-bundle
+composer require survos/js-twig-bundle
 ```
 
+
+See the [routing migration guide](../js-twig-bundle/docs/routing-migration.md):
+cache warmup supplies browser routes; no FOS bundle or routing importmap entry is needed.
