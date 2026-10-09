@@ -6,7 +6,7 @@
         <li class="item-content item-input">
             <div class="item-inner">
                 <div class="item-title item-label">{{ label }}</div>
-                <div class="item-input-wrap" {{ stimulus_controller('survos--fw-bundle--ks-autocomplete', {
+                <div class="item-input-wrap" {{ stimulus_controller(survos_stimulus('fw-bundle', 'ks_autocomplete'), {
                     sourceUrl: sourceUrl,
                     inputId: inputId,
                 }) }}>

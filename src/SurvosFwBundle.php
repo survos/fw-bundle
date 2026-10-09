@@ -26,8 +26,6 @@ use Symfony\Component\DependencyInjection\Reference;
 // Symfony\Component\HttpKernel\Bundle\Bundle <-- Flex auto-registration marker (see Survos\Kit\AbstractSurvosBundle)
 class SurvosFwBundle extends AbstractUxBundle
 {
-    public const ASSET_PACKAGE = 'fw';
-
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         parent::loadExtension($config, $container, $builder);

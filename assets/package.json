@@ -1,5 +1,5 @@
 {
-  "name": "@survos/fw",
+  "name": "@survos/fw-bundle",
   "description": "integrate Framework7 and related mobile libraries with Symfony",
   "license": "MIT",
   "version": "1.0.5",
