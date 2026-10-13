@@ -6,8 +6,8 @@ namespace Survos\FwBundle;
 
 use Survos\FwBundle\Command\CompileRoutesCommand;
 use Survos\FwBundle\Components\FwPage;
-use Survos\FwBundle\Components\MenuComponent;
 use Survos\FwBundle\Components\Ks\Autocomplete;
+use Survos\FwBundle\Components\MenuComponent;
 use Survos\FwBundle\Event\KnpMenuEvent;
 use Survos\FwBundle\Menu\MenuService;
 use Survos\FwBundle\Service\FwService;
@@ -35,7 +35,7 @@ class SurvosFwBundle extends AbstractUxBundle
                 ->setPublic(true)
                 ->setAutoconfigured(true)
                 ->setAutowired(true)
-                ;
+            ;
         }
 
         foreach ([CompileRoutesCommand::class] as $className) {
@@ -43,7 +43,6 @@ class SurvosFwBundle extends AbstractUxBundle
                 ->setPublic(true)
                 ->setAutoconfigured(true)
                 ->setAutowired(true);
-
         }
 
         $builder->register(FwService::class)
@@ -63,7 +62,6 @@ class SurvosFwBundle extends AbstractUxBundle
             ->setArgument('$helper', new Reference('knp_menu.helper'))
             ->setArgument('$factory', new Reference('knp_menu.factory'))
             ->setArgument('$eventDispatcher', new Reference('event_dispatcher'));
-        ;
 
         $builder->register(TwigExtension::class)
             ->addTag('twig.extension');
@@ -78,16 +76,15 @@ class SurvosFwBundle extends AbstractUxBundle
                 '$security',
                 new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE)
             );
-
     }
 
     public function process(ContainerBuilder $container): void
     {
-//        if (false === $container->hasDefinition('twig')) {
-//            throw new \RuntimeException('Twig service not found, composer require twig/twig');
-//            assert(false, "missing twig");
-//            return;
-//        }
+        //        if (false === $container->hasDefinition('twig')) {
+        //            throw new \RuntimeException('Twig service not found, composer require twig/twig');
+        //            assert(false, "missing twig");
+        //            return;
+        //        }
         $def = $container->getDefinition('twig');
 
         // add the constants to twig to make calling the menu easier.
@@ -131,7 +128,7 @@ class SurvosFwBundle extends AbstractUxBundle
             }
         }
 
-//        dd($isGranted);
+        //        dd($isGranted);
 
         file_put_contents($fn = $this->getCachedDataFilename($container), json_encode($isGranted));
 
@@ -146,7 +143,6 @@ class SurvosFwBundle extends AbstractUxBundle
         }
     }
 
-
     private function addProjectsSection(NodeBuilder $children): void
     {
         $pixieRoot = $children
@@ -154,17 +150,17 @@ class SurvosFwBundle extends AbstractUxBundle
             ->arrayPrototype()
             ->children();
 
-        $pixieRoot->scalarNode('code')->defaultValue('dummy')->info("configuration code for database, etc.")->end();
+        $pixieRoot->scalarNode('code')->defaultValue('dummy')->info('configuration code for database, etc.')->end();
         $pixieRoot->scalarNode('logo')->defaultValue('dummy/60x90.png')->end();
         $pixieRoot->scalarNode('name')->defaultValue('DummyProject')->end();
-        $pixieRoot->arrayNode('tabs')->info("Array of tab codes")->scalarPrototype()->end();
-        $pixieRoot->scalarNode('database')->info("indexDb database name")->defaultValue('MyDatabase')->end();
+        $pixieRoot->arrayNode('tabs')->info('Array of tab codes')->scalarPrototype()->end();
+        $pixieRoot->scalarNode('database')->info('indexDb database name')->defaultValue('MyDatabase')->end();
         $pixieRoot->arrayNode('stores')
             ->arrayPrototype()
             ->children()
-            ->scalarNode('name')->info("the store name")->example("friendTable")->end()
-            ->scalarNode('schema')->info("the index definition")->example("++i,age")->end()
-            ->scalarNode('url')->info("the API to use to load if empty.  json-ld iterates through pages")->end()
+            ->scalarNode('name')->info('the store name')->example('friendTable')->end()
+            ->scalarNode('schema')->info('the index definition')->example('++i,age')->end()
+            ->scalarNode('url')->info('the API to use to load if empty.  json-ld iterates through pages')->end()
             ->integerNode('limit')->defaultValue(100)->end()
             ->end();
 
@@ -175,17 +171,16 @@ class SurvosFwBundle extends AbstractUxBundle
             ->scalarNode('role')->defaultNull()->end()
             ->end();
 
-
-//        $pixieRoot->arrayNode('data')->isRequired(false)->defaultNull()->end();
+        //        $pixieRoot->arrayNode('data')->isRequired(false)->defaultNull()->end();
     }
 
-        public function configure(DefinitionConfigurator $definition): void
+    public function configure(DefinitionConfigurator $definition): void
     {
-        $rootNode =  $definition->rootNode();
+        $rootNode = $definition->rootNode();
         $rootNode
             ->children()
             ->scalarNode('name')
-                ->info("The app name when initializing Framework7")
+                ->info('The app name when initializing Framework7')
                 ->defaultValue('FwApp')
             ->end()
             ->scalarNode('theme')->defaultValue('pagestack')->end()
@@ -194,6 +189,5 @@ class SurvosFwBundle extends AbstractUxBundle
             ->end();
 
         $this->addProjectsSection($rootNode->children());
-
     }
 }

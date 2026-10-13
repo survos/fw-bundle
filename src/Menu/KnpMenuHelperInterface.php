@@ -1,11 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 // Simplifies the construction of menu items,
+
 namespace Survos\FwBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use Survos\FwBundle\Event\KnpMenuEvent;
 use Survos\FieldBundle\Entity\RouteParametersInterface;
+use Survos\FwBundle\Event\KnpMenuEvent;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -34,9 +37,8 @@ interface KnpMenuHelperInterface
     public function isGranted($attribute, $subject = null);
 
     public function authMenu(AuthorizationCheckerInterface $authorizationChecker,
-                             Security $security,
-
-                             ItemInterface                 $menu, $childOptions = []);
+        Security $security,
+        ItemInterface $menu, $childOptions = []);
 
     public function supports(KnpMenuEvent $event): bool;
 }

@@ -1,26 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 // Simplies the construction of menu items,
+
 namespace Survos\FwBundle\Menu;
 
 use Knp\Menu\ItemInterface;
-use Knp\Menu\MenuItem;
-use Survos\FwBundle\Event\KnpMenuEvent;
 use Survos\FieldBundle\Entity\RouteParametersInterface;
+use Survos\FwBundle\Event\KnpMenuEvent;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\String\Slugger\AsciiSlugger;
+
 use function Symfony\Component\String\u;
 
 trait KnpMenuHelperTrait
 {
-//    private ?AuthorizationCheckerInterface $authorizationChecker = null;
+    //    private ?AuthorizationCheckerInterface $authorizationChecker = null;
     //    private ?ParameterBagInterface $bag=null;
 
     //    private ?array $options;
-    private array $childOptions=[];
+    private array $childOptions = [];
 
     public function supports(KnpMenuEvent $event): bool
     {
@@ -39,29 +42,30 @@ trait KnpMenuHelperTrait
             'label' => $label,
             'icon' => $icon,
             'id' => $id,
-            'is_submenu' => true
+            'is_submenu' => true,
         ]);
         $subMenu->setExtra('is_submenu', true);
-//        $subMenu->setAttribute('is_submenu', true);
-//        if ($subMenu->getLabel() == 'tt@survos.com') dd($subMenu, $subMenu->getAttributes());
+
+        //        $subMenu->setAttribute('is_submenu', true);
+        //        if ($subMenu->getLabel() == 'tt@survos.com') dd($subMenu, $subMenu->getAttributes());
         return $subMenu;
     }
 
-    public function addHeading(ItemInterface $menu, string $label, ?string $icon = null, ?string $id=null): void
+    public function addHeading(ItemInterface $menu, string $label, ?string $icon = null, ?string $id = null): void
     {
         $item = $this->addMenuItem($menu, [
             'label' => $label,
             'style' => 'header',
             'icon' => $icon,
-            'id' => $id ?? (new AsciiSlugger())->slug($label)->toString()
+            'id' => $id ?? (new AsciiSlugger())->slug($label)->toString(),
         ]);
-
     }
 
     private function createId(ItemInterface $menu): string
     {
         $label = $menu->getLabel();
-        return (new AsciiSlugger())->slug($label)->toString() . '_' . uniqid();
+
+        return (new AsciiSlugger())->slug($label)->toString().'_'.uniqid();
     }
 
     // add returns self, for chaining, by default.  Pass returnItem: true to get the item for adding options.
@@ -80,10 +84,8 @@ trait KnpMenuHelperTrait
         bool $dividerPrepend = false,
         bool $dividerAppend = false,
         ?string $translationDomain = 'messages', // since there are so few
-
     ): self|ItemInterface { // for nesting.  Leaves only, requires route or uri.
-
-        assert(! ($route && $uri));
+        assert(!($route && $uri));
         $options = [];
         if ($route) {
             $options['route'] = $route;
@@ -100,22 +102,22 @@ trait KnpMenuHelperTrait
             $options['icon'] = $icon;
         }
 
-        if (! $label) {
-            $label = $route  ?? $uri; // @todo, be smarter.
+        if (!$label) {
+            $label = $route ?? $uri; // @todo, be smarter.
         }
 
         $options['label'] = $label;
-        if (! $id) {
+        if (!$id) {
             $id = $this->createId($menu);
         }
         $child = $menu->addChild($id, $options);
         if (!$label) {
             $child->setLabel(' '); // ideally so id isn't used.
         }
-//        if (!$label) dd($id, $options, $child->getName());
+        //        if (!$label) dd($id, $options, $child->getName());
         if ($uri) {
             $child->setUri($uri);
-            if ($external !== false) {
+            if (false !== $external) {
                 $external = true;
             }
         }
@@ -133,13 +135,12 @@ trait KnpMenuHelperTrait
                 $child->setExtra('translation_domain', $translationDomain);
             }
         }
-//        if ($child->getName() == 'login') dd($child->getExtras());
-
+        //        if ($child->getName() == 'login') dd($child->getExtras());
 
         // now add the various classes based on the style.  Unfortunately, this happens in the menu_get, not the render.
         $child->setLabel($label);
 
-        if ($options['icon']??false) {
+        if ($options['icon'] ?? false) {
             $child->setAttribute('icon', $options['icon']);
         }
 
@@ -154,42 +155,39 @@ trait KnpMenuHelperTrait
         $this->setChildOptions($child, $options);
         $child->setExtra('safe_label', true);
 
-            $child->setExtra('is_submenu', $options['is_submenu']);
-            $child->setExtra('rp', $options['routeParameters']);
-            $child->setAttribute('is_submenu', $options['is_submenu']);
+        $child->setExtra('is_submenu', $options['is_submenu']);
+        $child->setExtra('rp', $options['routeParameters']);
+        $child->setAttribute('is_submenu', $options['is_submenu']);
         if ($options['is_submenu']) {
         }
 
-
         if ($dividerAppend) {
-//            dd($label, $child->getLabel());
+            //            dd($label, $child->getLabel());
         }
-
 
         return $returnItem ? $child : $this;
     }
 
     public function addMenuItem(ItemInterface $menu, array $options, array $extra = []): ItemInterface
     {
-        assert(count($extra) === 0, json_encode($extra));
+        assert(0 === count($extra), json_encode($extra));
         $options = $this->menuOptions($options);
         // must pass in either route, icon or menu_code
 
         // especially for collapsible menus.  Cannot start with a digit.
         if (!$options['id']) {
-            $options['id'] = 'id_' . (new AsciiSlugger())->slug($options['label']??'')->toString() . '_' . md5(json_encode($options));
+            $options['id'] = 'id_'.(new AsciiSlugger())->slug($options['label'] ?? '')->toString().'_'.md5(json_encode($options));
         }
 
         $child = $menu->addChild($options['id'], $options);
         $this->setChildOptions($child, $options);
+
         return $child;
         //        $child->setChildrenAttribute('class', 'branch');
-
     }
 
     private function setChildOptions(ItemInterface $child, array $options): ItemInterface
     {
-
         if ($options['external']) {
             $child->setLinkAttribute('target', '_blank');
             $options['icon'] = 'fas fa-external-alt';
@@ -207,9 +205,8 @@ trait KnpMenuHelperTrait
             $child->setAttribute('feather', $icon);
         }
 
-
         // if this is a collapsible menu item, we need to set the data target to next element.  OR we can let knp_menu renderer handle it.
-        if (! $options['route'] && ! $options['uri']) {
+        if (!$options['route'] && !$options['uri']) {
             // only if there are children, but otherwise this is just a label
             //            $child->setAttribute('collapse_type', 'collapse');
             //            $child->setAttribute('class', 'collapse collapsed');
@@ -225,19 +222,17 @@ trait KnpMenuHelperTrait
                 'value' => $badge,
             ]);
         }
-        if (! empty($options['safe_label'])) {
+        if (!empty($options['safe_label'])) {
             $child->setExtra('safe_label', true);
         }
 
-
-        if ($routes = $options['routes']??false) {
+        if ($routes = $options['routes'] ?? false) {
             $child->setExtra('routes', $routes);
         }
 
         if ($style = $options['style']) {
             $child->setAttribute('style', $style);
         }
-
 
         return $child;
     }
@@ -275,7 +270,7 @@ trait KnpMenuHelperTrait
         if (is_object($options['rp'])) {
             $options['routeParameters'] = $options['rp']->getRp();
             if (empty($options['icon'])) {
-                $iconConstant = get_class($options['rp']) . '::ICON';
+                $iconConstant = get_class($options['rp']).'::ICON';
                 $options['icon'] = defined($iconConstant) ? constant($iconConstant) : 'fas fa-database'; // generic database entity
             }
         } elseif (is_array($options['rp'])) {
@@ -287,7 +282,7 @@ trait KnpMenuHelperTrait
             // _index is commonly used to list entities
             $routeLabel = preg_replace('/_index$/', '', $routeLabel);
             $routeLabel = preg_replace('/^app_/', '', $routeLabel);
-            if ($options['label'] !== false) {
+            if (false !== $options['label']) {
                 $options['label'] = u($routeLabel)->replace('_', ' ')->title(true)->toString();
             }
         }
@@ -297,19 +292,18 @@ trait KnpMenuHelperTrait
         }
 
         // if label is exactly true then automate the label from the route
-        if ($options['label'] === true) {
+        if (true === $options['label']) {
             $options['label'] = str_replace('_', '.', $options['route']);
         }
 
         // we could pass in a hash route and hash params instead.
         if ($fragment = $options['_fragment']) {
-            $options['uri'] = '#' . $fragment;
+            $options['uri'] = '#'.$fragment;
             unset($options['route']);
-            //
         }
 
         // default icons, should be configurable in survos_base.yaml
-        if ($options['icon'] === null) {
+        if (null === $options['icon']) {
             foreach ([
                 'show' => 'fas fa-eye',
                 'edit' => 'fas fa-wrench',
@@ -333,15 +327,16 @@ trait KnpMenuHelperTrait
         //            dd($options);
         //        }
 
-        if ($options['style'] === 'header') {
+        if ('header' === $options['style']) {
             // @warning: will probably break sneat!
-//            $options['attributes']['class'] = 'menu-header menu-title';
+            //            $options['attributes']['class'] = 'menu-header menu-title';
             $options['attributes']['class'] = 'menu-title';
         }
 
-        if (! $options['id']) {
+        if (!$options['id']) {
             $options['id'] = $options['menu_code'];
         }
+
         return $options;
     }
 
@@ -349,9 +344,10 @@ trait KnpMenuHelperTrait
     {
         return $this->security->isGranted($attribute, $subject);
 
-        if (! $this->authorizationChecker) {
-            throw new \Exception("call setAuthorizationChecker() before making this call.");
+        if (!$this->authorizationChecker) {
+            throw new \Exception('call setAuthorizationChecker() before making this call.');
         }
+
         return $this->authorizationChecker ? $this->authorizationChecker->isGranted($attribute, $subject) : false;
     }
 
@@ -361,12 +357,10 @@ trait KnpMenuHelperTrait
     }
 
     public function authMenu(AuthorizationCheckerInterface $authorizationChecker,
-                             Security $security,
-                             ItemInterface                 $menu,
-                             $childOptions = []): ItemInterface
+        Security $security,
+        ItemInterface $menu,
+        $childOptions = []): ItemInterface
     {
-
-
         if ($authorizationChecker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $user = $security->getUser();
             $subMenu = $this->addSubmenu($menu,
@@ -410,21 +404,19 @@ trait KnpMenuHelperTrait
                 // route is likely missing
             }
         }
+
         return $menu;
     }
 
     public function addWorkflowMenu(ItemInterface $menu)
     {
-        assert(isset($this->workflowHelperService), 'add protected WorkflowHelperService $workflowHelperService to the __constructor of ' . static::class);
+        assert(isset($this->workflowHelperService), 'add protected WorkflowHelperService $workflowHelperService to the __constructor of '.static::class);
         $workflowMenu = $this->addSubmenu($menu, 'Workflows', icon: 'fas fa-diagram-project');
-        $this->add($workflowMenu, route: 'survos_workflows', label: "All");
+        $this->add($workflowMenu, route: 'survos_workflows', label: 'All');
         foreach ($this->workflowHelperService->getWorkflowsIndexedByName() as $workflowCode => $workflow) {
             $this->add($workflowMenu, 'survos_workflow', [
                 'flowCode' => $workflowCode,
             ], $workflowCode);
         }
-
-
     }
-
 }

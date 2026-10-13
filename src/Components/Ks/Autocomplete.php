@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Survos\FwBundle\Components\Ks;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -27,7 +29,7 @@ final class Autocomplete
     public function mount(string $label, string $sourceRoute, ?string $inputId = null, string $placeholder = ''): void
     {
         $this->label = $label;
-        $this->inputId = $inputId ?? 'autocomplete-' . bin2hex(random_bytes(4));
+        $this->inputId = $inputId ?? 'autocomplete-'.bin2hex(random_bytes(4));
         $this->sourceUrl = $this->urlGenerator->generate($sourceRoute);
         $this->placeholder = $placeholder;
     }

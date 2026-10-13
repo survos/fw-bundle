@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Survos\FwBundle\Components;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -9,14 +11,15 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 final class FwPage
 {
     public string $caller;
-    public ?string $name=null;
-    public ?string $title=null;
+    public ?string $name = null;
+    public ?string $title = null;
 
     #[PreMount]
     public function preMount(array $data): array
     {
         return $data;
     }
+
     public function mount(string $caller): void
     {
         $baseName = pathinfo($caller, PATHINFO_FILENAME);

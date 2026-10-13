@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Survos\FwBundle\Twig;
 
 use Survos\FwBundle\Model\Fw7Meta;
@@ -16,14 +18,14 @@ class TwigExtension extends AbstractExtension
     public function getFilters(): array
     {
         return [
-            new TwigFilter('basename', [$this, 'basename'])
+            new TwigFilter('basename', [$this, 'basename']),
         ];
     }
 
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('fw7_metadata', $this->getFw7MetaData(...))
+            new TwigFunction('fw7_metadata', $this->getFw7MetaData(...)),
         ];
     }
 
@@ -32,15 +34,15 @@ class TwigExtension extends AbstractExtension
         // return $this->event??($this->type === 'page' ? 'postpush' : 'prechange');
 
         $templateId = $this->basename($_self);
-        $triggerEvent = sprintf("%s.%s", $templateId, ($type === 'tab') ? "prechange" : "postpush");
+        $triggerEvent = sprintf('%s.%s', $templateId, ('tab' === $type) ? 'prechange' : 'postpush');
+
         // optionsResolver?
         return new Fw7Meta(
             $templateId,
             type: $type,
             triggerEvent: $triggerEvent,
-                store: $extra['store'] ?? null,
+            store: $extra['store'] ?? null,
         );
-
     }
 
     public function basename(string $_self): string

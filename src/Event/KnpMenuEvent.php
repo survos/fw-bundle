@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Survos\FwBundle\Event;
 
 use Knp\Menu\FactoryInterface;
@@ -25,7 +27,7 @@ class KnpMenuEvent extends Event
         protected FactoryInterface $factory,
         private array $options = [],
         private array $childOptions = [],
-        private ?string $configCode=null,
+        private ?string $configCode = null,
     ) {
     }
 
@@ -34,7 +36,7 @@ class KnpMenuEvent extends Event
         return $this->configCode;
     }
 
-    static public function getConstants(): array
+    public static function getConstants(): array
     {
         return (new \ReflectionClass(__CLASS__))->getConstants();
     }
@@ -57,7 +59,8 @@ class KnpMenuEvent extends Event
     public function getOption(string $key): mixed
     {
         // @todo: validate with keys from $config
-        assert(array_key_exists($key, $this->options), "option '$key' is invalid, use " . join(', ', $this->options));
+        assert(array_key_exists($key, $this->options), "option '$key' is invalid, use ".join(', ', $this->options));
+
         return $this->options[$key];
     }
 

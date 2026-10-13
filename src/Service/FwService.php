@@ -10,8 +10,7 @@ class FwService
         // from yaml configuration?
         private array $config = [],
         private array $configs = [],
-    )
-    {
+    ) {
     }
 
     public function getConfigs(): array
@@ -23,5 +22,4 @@ class FwService
     {
         return $this->config;
     }
-
 }
