@@ -241,5 +241,5 @@ composer require survos/js-twig-bundle
 ```
 
 
-See the [routing migration guide](../js-twig-bundle/docs/routing-migration.md):
-cache warmup supplies browser routes; no FOS bundle or routing importmap entry is needed.
+Browser `path()` comes from [symfony/ux-router](https://symfony.com/bundles/ux-router/current/index.html)
+(see the [js-twig-bundle routing section](../js-twig-bundle/README.md#routing)); no FOS bundle is needed.

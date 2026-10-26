@@ -110,6 +110,5 @@ Add the following to your `composer.json`:
 
 Follow these steps to complete the setup and start building your application.
 
-Browser `path()` uses `survos/js-twig-bundle` and cache-warmed route JSON.
-Do not add a routing importmap entry or a FOS dump command. See the
-[routing migration guide](../../js-twig-bundle/docs/routing-migration.md).
+Browser `path()` comes from symfony/ux-router: map `'router' => ['path' => './assets/router.js']` in
+`importmap.php`. See the [routing section](../../js-twig-bundle/README.md#routing). No FOS dump command.
